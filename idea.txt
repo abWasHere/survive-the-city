@@ -1,0 +1,45 @@
+---------GOAL
+
+go to these places in order within 100 seconds :
+    university => mandatory
+    library
+    shitJob => mandatory
+    club
+    home => mandatory
+
+variables to win 
+
+some random people on you way (bots) are obstacles
+
+when you encounter obstacles (create CALLBACK FUNCTIONS) :
+    you lose time 
+    you win time
+    you get more stress
+    you decompress
+
+---------OBJECTS
+
+player = young woman (OBJECT)
+    name
+    availability (time left)
+    stress
+    happiness (points)
+
+bots (create CLASSES using the CALLBACKS) :
+    microbes = people not wearing mask
+    exBoyfriend
+    exGirlfriend
+    motherInLaw
+    => bots are moving
+
+places :
+    university
+    library
+    shitJob
+    club
+    home 
+    --
+    fastFood
+    coffeShop
+    shoppingMall
+

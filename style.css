@@ -1,0 +1,104 @@
+/* IMPORTS HERE
+
+*/
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+
+body {
+    width: 50%;
+    margin: auto;
+    background-color: grey;
+}
+
+#header-main,
+#game-infos,
+#footer {
+    padding: 0px 5px;
+}
+
+#header-main {
+    background-color: black; /* TO REMOVE !! */
+    color: white;
+}
+
+#header-main h1 {
+    height: 10vh;
+    line-height: 10vh;
+    width: 100%;
+    text-align: center;
+}
+
+#wrap-main {
+    border: red solid 2px; /* TO REMOVE !! */
+    background-color: whitesmoke;
+}
+
+#game-talks {
+    height: 150px;
+    background-color: teal;
+}
+
+#game-infos {
+    justify-content: flex-start;
+}
+
+#game-infos p.text-main {
+    height: 40px;
+    line-height: 40px;
+    width: 30%;
+    border-right: 1px red dashed; /* TO REMOVE !! */
+    font-size: 18px;
+}
+
+
+#game-interface {
+    background-color: grey;
+    height: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+#canvas {
+    border: rgb(0, 238, 255) 1px solid; /* TO REMOVE !! */
+}
+
+#game-gifs {
+    background-color: teal; /* TO REMOVE !! */
+    height: 150px;
+}
+
+#footer {
+    height: 10vh;
+    background-color: black;
+    color: white;
+}
+
+#footer {
+    justify-content: space-between;
+}
+
+#footer ul.list {
+    justify-content: flex-end;
+    width: 50%;
+    list-style: none;
+}
+
+#footer li.item {
+    margin-left: 30px;
+}
+
+#footer a {
+    text-decoration: none;
+    color: inherit;
+}
