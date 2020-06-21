@@ -1,48 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>RENAME THIS</title>
-        <link rel="stylesheet" href="style.css" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <script src="app.js" type="module"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/js/all.min.js"></script>
-    </head>
-    <body>
-        <header id="header-main">
-            <h1>SURVIVE THE CITY</h1>
-        </header>
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>playground</title>
+      <link rel="stylesheet" href="style.css" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <script src="app.js" type="module"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/js/all.min.js"></script>
+   </head>
+   <body class="blurred">
+      <div id="landing-page-instructions" class="flex">
+         <h1 id="landing-title">Survive The City</h1>
+         <img
+            id="landing-avatar"
+            src="./images/avatar-moi.jpg"
+            alt="avatar player"
+         />
+         <p id="landing-story">
+            PLAYER is a young woman simply trying to have a nice day. To achieve
+            this, she needs to go to school first, then go to her job, and go
+            back home. <br />
+            On her way, she might meet some people she
+            <strong>definitly does not want to deal with</strong>. <br />
+            Do your best to avoid them because they will stress the hell out of
+            her !
+         </p>
+         <p id="landing-rules">
+            press the Z key to move up <br />
+            press the S key to move down <br />
+            press the Q key to move left <br />
+            press the D key to move right <br />
+         </p>
+         <button class="button" id="landing-button-play"><i class="fas fa-play"></i></button>
+      </div>
 
-        <div id="wrap-main">
-            <div id="game-talks"></div>
-            <div id="game-infos" class="flex">
-                <p class="text-main">
-                    <i class="fas fa-heartbeat"></i> TIME LEFT <b> </b>
-                </p>
-                <p class="text-main">
-                    <i class="fas fa-smog"></i> STRESS <b> </b>
-                </p>
-                <p class="text-main">
-                    <i class="fas fa-smile-beam"></i> HAPPINESS PTS <b> </b>
-                </p>
-            </div>
-            <div id="game-interface">
-                <canvas id="canvas" width="800" height="400"> </canvas>
-            </div>
-            <div id="game-gifs" class="flex">
-              <img src="" alt="">
-            </div>
-        </div>
+      <header class="main" id="header-main">
+         <h1>SURVIVE THE CITY</h1>
+      </header>
 
-        <footer id="footer" class="flex">
-            <p class="footer-text">created by <strong>Audrey Belson</strong></p>
-            <ul class="list flex">
-                where you can find me !
-                <li class="item"><a href="https://github.com/abWasHere" class="link"><i class="fab fa-github"></i></a></li>
-                <li class="item"><a href="https://www.linkedin.com/in/audrey-belson-28382958/" class="link"><i class="fab fa-linkedin-in"></i></a></li>
-                <li class="item"><a href="#" class="link"><i class="fas fa-map-marked-alt"></i></a></li>
-            </ul>
-        </footer>
-    </body>
+      <div class="main" id="wrap-main">
+         <div id="game-talks">
+            <div id="player-talks" class="talks-box">
+               <img
+                  class="avatar"
+                  id="avatar-player"
+                  src="./images/avatar-moi.jpg"
+                  alt="gif"
+               />
+               <p class="talks"></p>
+            </div>
+
+            <div id="bot-talks" class="talks-box">
+               <img
+                  class="avatar"
+                  id="avatar-bot"
+                  src="./images/avatar-moi-bot.jpg"
+                  alt="gif"
+               />
+            </div>
+         </div>
+
+         <div id="game-infos" class="flex">
+            <p class="text-main">
+               <i class="fas fa-heartbeat"></i> TIME LEFT <b> </b>
+            </p>
+            <p class="text-main"><i class="fas fa-smog"></i> STRESS <b> </b></p>
+            <p class="text-main">
+               <i class="fas fa-smile-beam"></i> HAPPINESS PTS <b> </b>
+            </p>
+         </div>
+
+         <div id="game-interface">
+            <canvas id="canvas" width="800" height="400"> </canvas>
+         </div>
+
+         <div id="game-gifs" class="flex">
+            <img
+               class="gif-reaction"
+               src="./images/survive-city-gif/gif-bus-school.gif"
+            />
+            />gif
+         </div>
+      </div>
+
+      <footer id="footer" class="main flex">
+         <p class="footer-text">created by <strong>Audrey Belson</strong></p>
+         <ul class="list flex">
+            where you can find me !
+            <li class="item">
+               <a href="https://github.com/abWasHere" class="link"
+                  ><i class="fab fa-github"></i
+               ></a>
+            </li>
+            <li class="item">
+               <a
+                  href="https://www.linkedin.com/in/audrey-belson-28382958/"
+                  class="link"
+                  ><i class="fab fa-linkedin-in"></i
+               ></a>
+            </li>
+            <li class="item">
+               <a href="#" class="link"
+                  ><i class="fas fa-map-marked-alt"></i
+               ></a>
+            </li>
+         </ul>
+      </footer>
+   </body>
 </html>

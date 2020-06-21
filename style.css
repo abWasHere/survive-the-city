@@ -3,102 +3,180 @@
 */
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
 }
-
 
 .flex {
-    display: flex;
-    align-items: center;
+   display: flex;
+   align-items: center;
 }
-
 
 body {
-    width: 50%;
-    margin: auto;
-    background-color: grey;
+   width: 60%;
+   margin: auto;
+   background: rgb(134, 34, 195);
+   background: linear-gradient(
+      0deg,
+      rgba(134, 34, 195, 1) 0%,
+      rgba(22, 16, 2, 1) 100%
+   );
 }
+
+/* LANDING PAGE DISPLAYS */
+
+body .main {
+   /* AJOUTER UN DISPLAY NONE AU DEBUT DU JEU */
+   display: none;
+}
+
+body.blurred {
+
+   width: 80%;
+   height: 70%;
+   margin-top: 15%;
+   margin-bottom: 15%;
+   color: whitesmoke;
+}
+
+#landing-page-instructions {
+   /* AJOUTER UN DISPLAY NONE AU DEMARRAGE DU JEU */
+   flex-direction: column;
+   justify-content: center;
+    padding: 20px;
+    text-align: justify;
+   background-color: rgba(0, 0, 0, 0.486);
+   border-left: 2px red dashed;
+   border-right: 2px red dashed;
+}
+
+#landing-title {
+
+}
+
+#landing-avatar {
+    height: 300px;
+    margin: 50px;
+    
+}
+
+#landing-story {
+
+}
+
+#landing-story strong {
+    color: red;
+}
+
+#landing-rules {
+
+}
+
+#landing-button-play {
+    height: 100px;
+    width: 100px;
+}
+.fa-play {
+    color: red;
+    background-color: none;
+}
+
+/* MAIN PAGE DISPLAYS */
 
 #header-main,
 #game-infos,
 #footer {
-    padding: 0px 5px;
+   padding: 0px 5px;
 }
 
 #header-main {
-    background-color: black; /* TO REMOVE !! */
-    color: white;
+   color: white;
 }
 
 #header-main h1 {
-    height: 10vh;
-    line-height: 10vh;
-    width: 100%;
-    text-align: center;
+   height: 10vh;
+   line-height: 10vh;
+   width: 100%;
+   text-align: center;
 }
 
 #wrap-main {
-    border: red solid 2px; /* TO REMOVE !! */
-    background-color: whitesmoke;
+   background-color: #f5f5f5;
+}
+
+#game-talks,
+#game-gifs {
+   height: 150px;
+   background: rgb(164, 63, 251);
+   background: radial-gradient(
+      circle,
+      rgba(164, 63, 251, 1) 0%,
+      rgba(252, 70, 70, 1) 100%
+   );
 }
 
 #game-talks {
-    height: 150px;
-    background-color: teal;
 }
 
 #game-infos {
-    justify-content: flex-start;
+   justify-content: flex-start;
 }
 
 #game-infos p.text-main {
-    height: 40px;
-    line-height: 40px;
-    width: 30%;
-    border-right: 1px red dashed; /* TO REMOVE !! */
-    font-size: 18px;
+   height: 40px;
+   line-height: 40px;
+   width: 30%;
+   border-right: 1px red dashed; /* TO REMOVE !! */
+   font-size: 18px;
 }
 
+/* ------- PLAYGROUND --------- */
 
 #game-interface {
-    background-color: grey;
-    height: 400px;
-    width: 100%;
-    text-align: center;
+   background-color: grey;
+   height: 400px;
+   width: 100%;
+   text-align: center;
+   border: 4mm ridge rgba(30, 33, 51, 0.6);
 }
 
 #canvas {
-    border: rgb(0, 238, 255) 1px solid; /* TO REMOVE !! */
+   border: rgb(0, 238, 255) 1px solid; /* TO REMOVE !! */
 }
 
 #game-gifs {
-    background-color: teal; /* TO REMOVE !! */
-    height: 150px;
+}
+
+/* REACTIONS GIF SECTION */
+
+#game-gifs .gif-reaction {
+   height: 150px;
+}
+
+/* FOOTER */
+
+#footer {
+   height: 5vh;
+   background-color: black;
+   color: white;
 }
 
 #footer {
-    height: 10vh;
-    background-color: black;
-    color: white;
-}
-
-#footer {
-    justify-content: space-between;
+   justify-content: space-between;
 }
 
 #footer ul.list {
-    justify-content: flex-end;
-    width: 50%;
-    list-style: none;
+   justify-content: flex-end;
+   width: 50%;
+   list-style: none;
 }
 
 #footer li.item {
-    margin-left: 30px;
+   margin-left: 30px;
 }
 
 #footer a {
-    text-decoration: none;
-    color: inherit;
+   text-decoration: none;
+   color: inherit;
 }
