@@ -230,3 +230,12 @@ function generateBots() {}
 
 // console.log (starbucks)
 // console.log (exBoyfriend)
+
+const places = [
+   {name: 'starbucks', logo: 'https://img.icons8.com/color/48/000000/starbucks.png'},
+   {name: 'Shopping Mall', logo: 'https://img.icons8.com/doodle/96/000000/shopping-bag--v1.png'},
+   {name: 'university', logo: ''},
+   {name: 'office', logo: ''},
+   {name: 'home', logo: 'https://img.icons8.com/doodle/96/000000/cottage--v1.png'}
+]
+
