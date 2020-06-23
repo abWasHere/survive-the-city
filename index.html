@@ -7,10 +7,10 @@
       <link rel="stylesheet" href="style.css" />
       <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       <!-- <script src="./javascript/app.js" type="module"></script> -->
-      <script src="./javascript/players.js" type="module"></script>
+      <script src="./javascript/app.js" type="module"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/js/all.min.js"></script>
    </head>
-   <body>
+   <body class="cleaned">
       <div id="landing-page-instructions" class="flex">
          <h1 id="landing-title">Survive The City</h1>
          <img
@@ -18,16 +18,30 @@
             src="./images/pic-tiffany.jpg"
             alt="picture player"
          />
+         <input
+            type="text"
+            name="your-name"
+            id="landing-player-name"
+            placeholder="ENTER YOUR NAME PLAYER"
+            maxlength="15"
+         />
          <p id="landing-story">
-            Tiffany is a young woman simply trying to have a nice day. To
-            achieve this, she needs to go to school first, then go to her job,
-            and go back home. <br />
+            <i class="player-name">PLAYER</i> is a young woman simply trying to
+            have a nice day. To achieve this, she needs to go to school first,
+            then go to her job, and go back home. <br />
             <br />
             On her way, she might meet some people she definitly does not want
             to deal with. <br />
             Do your best to <b>avoid them</b> because they will stress the hell
-            out of her !
+            out of her ! <br />
+            <br />
+            SELECT YOUR LEVEL NOW !
          </p>
+         <div id="landing-levels" class="flex">
+            <button class="button level" id="level1">CHILL</button>
+            <button class="button level" id="level2">CHALLENGING</button>
+            <button class="button level" id="level3">HAAAARD</button>
+         </div>
          <button class="button" id="landing-button-ok">
             GOT IT !
          </button>
@@ -56,19 +70,21 @@
                <img
                   class="picture"
                   id="picture-bot"
-                  style= "display: none;" 
-                  alt="bots pics" 
+                  style="display: none;"
+                  alt="bots pics"
                />
             </div>
          </div>
 
          <div id="game-infos" class="flex">
-            <p class="text-main">PLAYER: Tiffany</p>
-            <p id="time" class="text-main">
-               <i class="fas fa-heartbeat"></i> TIME LEFT <b> </b>
+            <p class="text-main">PLAYER: <i class="player-name">You</i></p>
+            <p class="text-main">
+               <i class="fas fa-heartbeat"></i> TIME LEFT 
+               <b id="time"></b>
             </p>
-            <p id="stress" class="text-main">
-               <i class="fas fa-smog"></i> STRESS <b> </b>
+            <p class="text-main">
+               <i class="fas fa-smog"></i> STRESS 
+               <b id="stress"> </b>
             </p>
          </div>
 
@@ -84,34 +100,34 @@
                <b>D</b> key : move right <br />
             </p>
             <img
-               class="gif-reaction"
-               src="./images/survive-city-gif/gif-you-got-this.gif"
+               id="gif-reaction"
+               src="./images/reactions-gif/gif-you-got-this.gif"
             />
             <button class="button" id="reset-button">RESET GAME</button>
          </div>
-      </div>
 
-      <footer id="footer" class="main flex">
-         <p class="footer-text"><b>created by Audrey Belson</b></p>
-         <ul class="list flex">
-            <li class="item">
-               <a href="https://github.com/abWasHere" class="link"
-                  ><i class="fab fa-github"></i
-               ></a>
-            </li>
-            <li class="item">
-               <a
-                  href="https://www.linkedin.com/in/audrey-belson-28382958/"
-                  class="link"
-                  ><i class="fab fa-linkedin-in"></i
-               ></a>
-            </li>
-            <li class="item">
-               <a href="#" class="link"
-                  ><i class="fas fa-map-marked-alt"></i
-               ></a>
-            </li>
-         </ul>
-      </footer>
+         <footer id="footer" class="flex">
+            <p class="footer-text"><b>created by Audrey Belson</b></p>
+            <ul class="list flex">
+               <li class="item">
+                  <a href="https://github.com/abWasHere" class="link"
+                     ><i class="fab fa-github"></i
+                  ></a>
+               </li>
+               <li class="item">
+                  <a
+                     href="https://www.linkedin.com/in/audrey-belson-28382958/"
+                     class="link"
+                     ><i class="fab fa-linkedin-in"></i
+                  ></a>
+               </li>
+               <li class="item">
+                  <a href="#" class="link"
+                     ><i class="fas fa-map-marked-alt"></i
+                  ></a>
+               </li>
+            </ul>
+         </footer>
+      </div>
    </body>
 </html>

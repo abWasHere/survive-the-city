@@ -5,13 +5,6 @@ const botPic = document.getElementById('picture-bot');
 const playerAnswers = document.getElementById('player-answers');
 const botSpeech = document.getElementById('bot-speech');
 
-/* ------------------- CANVAS DEFINITION */
-
-var canvasContainer = document.getElementById('game-interface');
-var canvas = document.querySelector('canvas');
-canvas.width = canvasContainer.clientWidth;
-canvas.height = canvasContainer.clientHeight; // inner size of an element in px
-var c = canvas.getContext('2d');
 
 /* ------------------- SHARED FUNCTIONS */
 
@@ -28,6 +21,7 @@ var dy = 5; // pas de vélocité en ordonnées
 /* ------------------- PLAYER OBJECT */
 
 const player = {
+   name: 'Tiffany',
    time: 100,
    stress: 10,
    picture: '../images/pic-tiffany-normal-100.png',
@@ -79,9 +73,29 @@ const player = {
       }, 5500);
    },
 
-   loseTime() {},
+   manageStress(effect) {
+      this.stress += effect;
+      if (this.stress > 100) {
+         return gameOver('to much stress');
+      } else if (this.stress < 0) {
+         return (this.stress = 0);
+      } else {
+         console.log(this.stress);
+         return this.stress
+      }
+   },
 
-   getStress() {},
+   loseTime(usage) {
+      this.time -= usage;
+      if (this.time <= 100) {
+         return gameOver('no time left');
+      } else if (this.time > 100) {
+         return (this.time = 100);
+      } else {
+         console.log(this.time);
+         return this.time
+      }
+   },
 
    // modifier les unités si utilisation du CANVAS
    moveUp() {
@@ -116,7 +130,7 @@ class Bots {
       return `${this.name} has moved`; // A CHANGER !!!
    }
    useTime() {
-      return this.time
+      return this.time;
    }
    giveStress() {
       return this.stress;
@@ -130,7 +144,7 @@ class Places extends Bots {
       this.logo = logo;
       super.useTime();
       super.giveStress();
-   }  
+   }
 }
 
 class ExLovers extends Bots {
@@ -177,7 +191,7 @@ class ExLovers extends Bots {
    }
 }
 
-class MotherinLaw extends Bots {
+class MotherInLaw extends Bots {
    constructor(time, stress, x, y) {
       super(time, stress, x, y);
       this.pictures = [
@@ -215,27 +229,54 @@ class MotherinLaw extends Bots {
    }
 }
 
-function generateBots() {}
+function generateBots(botType, amount) {
+   let i = 0;
+
+   do {
+      if(type === "ex") {
+         const newEx = new ExLovers () 
+      } else if (type === "mil") {
+         const newMIL = new MotherInLaw ()
+         }
+   }
+}
+
+function generatePlaces(placeType) {
+   const coffee = new Places ('starbuck', etc) {
+
+   }
+}
+
 
 /* ---------------------------------------------------- */
 /* ----------------------- TESTS ---------------------- */
 
 // const exBoyfriend = new ExLovers(-10, 10, 2, 3);
-// const janine = new MotherinLaw();
+// const janine = new MotherInLaw();
 // janine.changePicture();
 // janine.talk();
-
 
 // const starbucks = new Places ('starbucks', 'https://img.icons8.com/color/48/000000/starbucks.png', 15, -30, 2, 20)
 
 // console.log (starbucks)
 // console.log (exBoyfriend)
 
+// console.log(player.manageStress(20));
+
 const places = [
-   {name: 'starbucks', logo: 'https://img.icons8.com/color/48/000000/starbucks.png'},
-   {name: 'Shopping Mall', logo: 'https://img.icons8.com/doodle/96/000000/shopping-bag--v1.png'},
-   {name: 'university', logo: ''},
-   {name: 'office', logo: ''},
-   {name: 'home', logo: 'https://img.icons8.com/doodle/96/000000/cottage--v1.png'}
-]
+   {
+      name: 'starbucks',
+      logo: 'https://img.icons8.com/color/48/000000/starbucks.png',
+   },
+   {
+      name: 'Shopping Mall',
+      logo: 'https://img.icons8.com/doodle/96/000000/shopping-bag--v1.png',
+   },
+   { name: 'university', logo: '' },
+   { name: 'office', logo: '' },
+   {
+      name: 'home',
+      logo: 'https://img.icons8.com/doodle/96/000000/cottage--v1.png',
+   },
+];
 
