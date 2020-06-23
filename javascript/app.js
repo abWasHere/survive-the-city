@@ -89,9 +89,9 @@ function loadAvatar(person) {
    ctx.beginPath();
    img.onload = function () {
       ctx.drawImage(img, person.x, person.y, 30, 40);
-    };
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
-   img.src = `${person.avatar}`;
+   };
+   ctx.clearRect(0, 0, innerWidth, innerHeight);
+   img.src = `${person.avatars}`;
 }
 
 /* ---------- PLAYERS */
@@ -99,8 +99,8 @@ function loadAvatar(person) {
 const player = {
    time: 100,
    stress: 10,
-   picture: '../images/pic-tiffany-normal-100.png',
-   avatar: '../images/avatar-player-tiffany-50.jpg',
+   pictures: '../images/pic-tiffany-normal-100.png',
+   avatars: '../images/avatar-player-tiffany-50.jpg',
    x: 10,
    y: 10,
    dx: 4, // pas de vélocité en abscisses
@@ -186,7 +186,8 @@ const player = {
             console.log('player has moved UP');
             break;
          case 'KeyS':
-            if (player.y < canvas.height - player.dy) player.y += player.dy;
+            if (player.y < canvas.height - player.dy - 42) // chiffre trouvé après test console...
+               player.y += player.dy;
             console.log('player has moved DOWN');
             break;
          case 'KeyA':
@@ -194,7 +195,7 @@ const player = {
             console.log('player has moved LEFT');
             break;
          case 'KeyD':
-            if (player.x < canvas.width - player.dx) player.x += player.dx;
+            if (player.x < canvas.width - player.dx - 30) player.x += player.dx;
             console.log('player has moved RIGHT');
             break;
          default:
@@ -205,88 +206,149 @@ const player = {
 };
 
 class Bots {
-    constructor(time, stress, x, y, dx, dy, pictures, avatars) {
-       this.time = time;
-       this.stress = stress;
-       this.x = x;
-       this.y = y;
-       this.pictures = pictures;
-       this.avatars = avatars;
-       this.dx = dx;
-       this.dy = dy;
-    }
-    changePicture() {
-       var randomPic = this.pictures[getRandomInt(this.pictures.length)];
-       botPic.setAttribute('src', `${randomPic}`);
-       botPic.removeAttribute('style');
-    }
-    move() {
-       // change the coordinates
-       if (this.x + this.dx > innerWidth || this.x - this.dx < 0) {
-          this.dx = -this.dx; // on change de sens sur l'axe des x
-       }
-       if (y + this.dy > innerHeight || this.y - this.dy < 0) {
-          this.dy = -this.dy; // on change de sens sur l'axe des y
-       }
-       // incrémente les coordonnées des bots
-       this.x += this.dx;
-       this.y += this.dy;
- 
-       loadAvatar(this);
-    }
- 
-    useTime() {
-       return this.time;
-    }
-    giveStress() {
-       return this.stress;
-    }
- }
+   constructor(time, stress, x, y, dx, dy, pictures, avatars) {
+      this.time = time;
+      this.stress = stress;
+      this.x = x;
+      this.y = y;
+      this.dx = dx;
+      this.dy = dy;
+      this.pictures = [pictures];
+      this.avatars = [avatars];
+   }
+   changePicture() {
+      var randomPic = this.pictures[getRandomInt(this.pictures.length)];
+      botPic.setAttribute('src', `${randomPic}`);
+      botPic.removeAttribute('style');
+   }
 
- class ExLovers extends Bots {
-    constructor(time, stress, x, y, dx, dy) {
-       super(time, stress, x, y, dx, dy);
-       super.useTime();
-       super.giveStress();
-       super.move();
-       super.changePicture();
-       this.pictures = [
-          '../images/bots-pictures/pic-bot-ex-drake-100.jpg',
-          '../images/bots-pictures/pic-bot-ex-laverne-100.jpg',
-          '../images/bots-pictures/pic-bot-ex-laurence-100.jpg',
-          '../images/bots-pictures/pic-bot-ex-meghan-100.jpg',
-       ];
-       this.avatars = [
-          '../images/bots-pictures/avatar-ex0.png',
-          '../images/bots-pictures/avatar-ex1.png',
-          '../images/bots-pictures/avatar-ex2.png',
-          '../images/bots-pictures/avatar-ex3.png',
-          '../images/bots-pictures/avatar-ex4.png',
-       ];
-       this.name = 'ex';
-    }
- 
-    talk() {
-       var firstTalk = "Girl! It's been a long time...";
- 
-       var talks = [
-          'I think I made a mistake!',
-          "I'm married. I have 2 kids and a dog now.",
-          "I've changed you know...",
-       ];
- 
-       botSpeech.innerHTML = `<p class="talks">${firstTalk}</p>`;
- 
-       setTimeout(() => {
-          botSpeech.innerHTML += `<p class='talks'> ${
-             talks[getRandomInt(talks.length)]
-          }`;
-       }, 4000);
- 
-       player.answerTo('ex');
-    }
- }
+   move() {
+      // change the coordinates
+      if (this.x + this.dx > innerWidth || this.x - this.dx < 0) {
+         this.dx = -this.dx; // on change de sens sur l'axe des x
+      }
+      if (this.y + this.dy > innerHeight || this.y - this.dy < 0) {
+         this.dy = -this.dy; // on change de sens sur l'axe des y
+      }
+      // incrémente les coordonnées des bots
+      this.x += this.dx;
+      this.y += this.dy;
 
+      loadAvatar(this);
+   }
+
+   useTime() {
+      return this.time;
+   }
+   giveStress() {
+      return this.stress;
+   }
+}
+
+class ExLovers extends Bots {
+   constructor(x, y, dx, dy) {
+      super(x, y, dx, dy);
+      super.useTime();
+      super.giveStress();
+      super.move();
+      super.changePicture();
+      this.pictures = [
+         '../images/bots-pictures/pic-bot-ex-drake-100.jpg',
+         '../images/bots-pictures/pic-bot-ex-laverne-100.jpg',
+         '../images/bots-pictures/pic-bot-ex-laurence-100.jpg',
+         '../images/bots-pictures/pic-bot-ex-meghan-100.jpg',
+      ];
+      this.avatars = [
+         '../images/bots-pictures/avatar-ex0.png',
+         '../images/bots-pictures/avatar-ex1.png',
+         '../images/bots-pictures/avatar-ex2.png',
+         '../images/bots-pictures/avatar-ex3.png',
+         '../images/bots-pictures/avatar-ex4.png',
+      ];
+      this.name = 'ex';
+      this.time = 10;
+      this.stress = 10;
+   }
+
+   talk() {
+      var firstTalk = "Girl! It's been a long time...";
+
+      var talks = [
+         'I think I made a mistake!',
+         "I'm married. I have 2 kids and a dog now.",
+         "I've changed you know...",
+      ];
+
+      botSpeech.innerHTML = `<p class="talks">${firstTalk}</p>`;
+
+      setTimeout(() => {
+         botSpeech.innerHTML += `<p class='talks'> ${
+            talks[getRandomInt(talks.length)]
+         }`;
+      }, 4000);
+
+      player.answerTo('ex');
+   }
+}
+
+class MotherInLaw extends Bots {
+   constructor(x, y, dx, dy) {
+      super(x, y, dx, dy);
+      super.useTime();
+      super.giveStress();
+      super.move();
+      super.changePicture();
+      this.pictures = [
+         `../images/bots-pictures/pic-bot-madea-1-100.jpg`,
+         `../images/bots-pictures/pic-bot-madea-2-100.jpg`,
+         `../images/bots-pictures/pic-bot-madea-3-100.jpg`,
+      ];
+      this.avatar = `../images/bots-pictures/avatar-mil-madea.png`;
+      this.name = 'motherInLaw';
+   }
+
+   talk() {
+      var firstTalk = 'Hi Tiffany!';
+
+      var talks = [
+         `Aren't you at school ???`,
+         'When am I going to have grandchildren ?',
+         'You look tired.',
+         `Your hair is a mess!`,
+      ];
+
+      botSpeech.innerHTML = `<p class="talks">${firstTalk}</p>`;
+
+      setTimeout(() => {
+         botSpeech.innerHTML += `<p class="talks">${
+            talks[getRandomInt(talks.length)]
+         }</p>`;
+      }, 3500);
+
+      player.answerTo('motherInLaw');
+   }
+}
+
+function generateBots(botType, amount, dx, dy) {
+   var botGroup = [];
+
+   for (var i = 0; i < amount; i++) {
+      // create 50 circles with random coordinates and push them in the circleArray
+      var x = Math.random() * (innerWidth - dx) + dx;
+      var y = Math.random() * (innerHeight - dy) + dy;
+
+      botGroup.push(new botType(x, y, dx, dy));
+   }
+
+   function animate() {
+      requestAnimationFrame(animate); // create a loop inside the animate function
+      c.clearRect(0, 0, innerWidth, innerHeight);
+
+      for (let i = 0; i < botGroup.length; i++) {
+         botGroup[i].move();
+      }
+   }
+}
 
 /* ---------- CANVAS */
 
@@ -305,17 +367,17 @@ function setDifficulty(event) {
 
    switch (event.target.id) {
       case 'level2':
-         generateBots(ex, 8);
-         generateBots(mil, 1);
+         generateBots(ExLovers, 8, 7, 7);
+         generateBots(MotherInLaw, 1, 8, 8);
          break;
       case 'level3':
-         generateBots(ex, 10);
-         generateBots(mil, 2);
+         generateBots(ExLovers, 8, 8, 8);
+         generateBots(MotherInLaw, 2, 10, 10);
          break;
       default:
          //LEVEL 1
-         generateBots(ex, 5);
-         generateBots(mil, 1);
+         generateBots(ExLovers, 5, 5, 5);
+         generateBots(MotherInLaw, 1, 6, 6);
    }
 }
 

@@ -28,64 +28,14 @@ const places = [
 
 
 
-class MotherInLaw extends Bots {
-   constructor(time, stress, x, y) {
-      super(time, stress, x, y);
-      super.useTime();
-      super.giveStress();
-      super.move();
-      super.changePicture();
-      this.pictures = [
-         `../images/bots-pictures/pic-bot-madea-1-100.jpg`,
-         `../images/bots-pictures/pic-bot-madea-2-100.jpg`,
-         `../images/bots-pictures/pic-bot-madea-3-100.jpg`,
-      ];
-      this.avatar = `../images/bots-pictures/avatar-mil-madea.png`;
-      this.name = 'motherInLaw';
-   }
-
-   talk() {
-      var firstTalk = 'Hi Tiffany!';
-
-      var talks = [
-         `Aren't you at school ???`,
-         'When am I going to have grandchildren ?',
-         'You look tired.',
-         `Your hair is a mess!`,
-      ];
-
-      botSpeech.innerHTML = `<p class="talks">${firstTalk}</p>`;
-
-      setTimeout(() => {
-         botSpeech.innerHTML += `<p class="talks">${
-            talks[getRandomInt(talks.length)]
-         }</p>`;
-      }, 3500);
-
-      player.answerTo('motherInLaw');
-   }
-}
 
 /* 
-function generateBots(botType, amount) {
-   let i = 0;
-
-   do {
-      if(type === "ex") {
-         const newEx = new ExLovers () 
-      } else if (type === "mil") {
-         const newMIL = new MotherInLaw ()
-         }
-   }
-}
-
 function generatePlaces(placeType) {
    const coffee = new Places ('starbuck', etc) {
 
    }
 }
  */
-
 /* ---------------------------------------------------- */
 /* ----------------------- TESTS ---------------------- */
 
