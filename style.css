@@ -204,7 +204,7 @@ input#landing-player-name {
 /* ------- GAME INFOS DISPLAY --------- */
 
 #game-infos {
-   justify-content: flex-start;
+   justify-content: space-around;
    height: 30px;
    background-color: grey;
 }
@@ -212,13 +212,14 @@ input#landing-player-name {
 #game-infos p.text-main {
    height: 50px;
    line-height: 50px;
-   width: 30%;
+   min-width: 20%;
    color: rgb(44, 44, 44);
-   font-size: 18px;
+   font-size: 15px;
 }
 
 #game-infos b {
-   color: rgb(179, 33, 236);
+   color: whitesmoke;
+   font-size: 20px;
 }
 
 /* ------- PLAYGROUND --------- */
@@ -230,10 +231,10 @@ input#landing-player-name {
    text-align: center;
    border: 5mm inset rgba(49, 47, 49, 0.856);
 }
-
+/* 
 #canvas {
-   /* border: rgb(0, 238, 255) 1px dashed; */
-}
+   border: rgb(0, 238, 255) 2px dashed;
+} */
 
 /* ------- REACTIONS GIF SECTION ------- */
 
