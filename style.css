@@ -225,17 +225,23 @@ input#landing-player-name {
 /* ------- PLAYGROUND --------- */
 
 #game-interface {
-   background: url('./images/places/doodle-city-map.jpg');
+   background: url('./images/places/tim-trad-r2NBj6GAJzw-unsplash.jpg');
    background-size: cover;
    height: 450px;
    width: 100%;
    text-align: center;
    border: 5mm inset rgba(49, 47, 49);
 }
-/* 
-#canvas {
-   border: rgb(0, 238, 255) 2px dashed;
-} */
+
+#game-interface #end-game-popup {
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   color: rgba(247, 0, 255, 0.459);
+   text-shadow: rgba(0, 0, 0, 0.822) 5px 5px;
+   font-size: 50px;
+}
 
 /* ------- REACTIONS GIF SECTION ------- */
 
