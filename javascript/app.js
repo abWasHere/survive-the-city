@@ -1,4 +1,4 @@
-/* ---------- DOM GAMEPLAY/INTERFACE */
+/* ---------- DOM GAMEPLAY/INTERFACE ---------- */
 const playerName = document.getElementById('landing-player-name');
 const gotItBtn = document.getElementById('landing-button-ok');
 const level1Btn = document.getElementById('level1');
@@ -7,7 +7,7 @@ const level3Btn = document.getElementById('level3');
 const levelDisplay = document.getElementById('level-display');
 const resetBtn = document.getElementById('reset-button');
 
-/* ---------- DOM PLAYERS */
+/* ---------- DOM PLAYER + BOTS ---------- */
 const playerPic = document.getElementById('picture-player');
 const botPic = document.getElementById('picture-bot');
 const playerAnswers = document.getElementById('player-answers');
@@ -16,22 +16,20 @@ const botTalkBox = document.getElementById('bot-talks');
 const gifReaction = document.getElementById('gif-reaction');
 
 /* ---------- CANVAS ---------- */
-
 // var canvasContainer = document.getElementById('game-interface');
 var canvas = document.getElementById('canvas');
+// la propriété CLIENTWIDTH NE FONCTIONNE PAS sur le parent de canvas ... donc :
 canvas.width = 780;
 canvas.height = 415;
-// la propriété CLIENTWIDTH NE FONCTIONNE PAS ...
 var ctx = canvas.getContext('2d');
-console.log(canvas.height);
 
 function draw(obj) {
    ctx.beginPath();
-   var img = new Image(); // Crée un nouvel élément Image
-   img.onload = function () {
-      ctx.drawImage(img, obj.x, obj.y, 45, 45);
-   };
-   img.src = `${obj.avatar}`;
+   //var img = new Image(); // Crée un nouvel élément Image
+   //img.onload = function () {
+   ctx.drawImage(obj.img, obj.x, obj.y, 45, 45);
+   //};
+   //img.src = `${obj.avatar}`;
 
    ctx.closePath();
 }
@@ -211,25 +209,14 @@ const player = {
 };
 
 class Bots {
-   constructor(time, stress, x, y, dx, dy, pictures, avatar) {
-      this.time = time;
-      this.stress = stress;
-      this.x = x;
-      this.y = y;
-      this.dx = dx;
-      this.dy = dy;
-      this.pictures = [pictures];
-      this.avatar = avatar;
-   }
-
-   changePicture() {
-      var randomPic = this.pictures[getRandomInt(this.pictures.length)];
-      botTalkBox.innerHTML += `<img
-      class="picture"
-      id="picture-bot"
-      style="display: none;"
-      alt="bots pics"
-      src="${this.picture}"`;
+   constructor(x, y, dx, dy) {
+      // this.time = time;
+      // this.stress = stress;
+      // this.x = x;
+      // this.y = y;
+      // this.dx = dx;
+      // this.dy = dy;
+      // this.img = img;
    }
 
    updatePosition() {
@@ -247,20 +234,30 @@ class Bots {
       draw(this);
    }
 
+   changePicture() {
+      var randomPic = this.pictures[getRandomInt(this.pictures.length)];
+      botTalkBox.innerHTML += `<img
+      class="picture"
+      id="picture-bot"
+      style="display: none;"
+      alt="bots pics"
+      src="${this.picture}"`;
+   }
+
    useTime() {
       return this.time;
    }
+
    giveStress() {
       return this.stress;
    }
 }
 
 class ExLovers extends Bots {
-   constructor(x, y, dx, dy) {
+   constructor(x, y, dx, dy, img) {
       super(x, y, dx, dy);
       super.useTime();
       super.giveStress();
-      // super.drawAvatar();
       super.updatePosition();
       super.changePicture();
       this.pictures = [
@@ -269,21 +266,14 @@ class ExLovers extends Bots {
          '../images/bots-pictures/pic-bot-ex-laurence-100.jpg',
          '../images/bots-pictures/pic-bot-ex-meghan-100.jpg',
       ];
-      /* this.avatars = [
-         '../images/bots-pictures/avatar-ex0.png',
-         '../images/bots-pictures/avatar-ex1.png',
-         '../images/bots-pictures/avatar-ex2.png',
-         '../images/bots-pictures/avatar-ex3.png',
-         '../images/bots-pictures/avatar-ex4.png',
-      ]; */
-      this.avatar = '../images/bots-pictures/avatar-ex0.png';
+      // this.img = img;
       this.name = 'ex';
       this.time = 10;
       this.stress = 15;
-      this.x = x;
-      this.dx = dx;
-      this.y = y;
-      this.dy = dy;
+      // this.x = x;
+      // this.dx = dx;
+      // this.y = y;
+      // this.dy = dy;
    }
 
    talk() {
@@ -303,16 +293,15 @@ class ExLovers extends Bots {
          }`;
       }, 4000);
 
-      player.answerTo('ex');
+      player.answerTo(`${this.name}`);
    }
 }
 
 class MotherInLaw extends Bots {
-   constructor(x, y, dx, dy) {
-      super(x, y, dx, dy);
+   constructor(x, y, dx, dy, img) {
+      super(x, y, dx, dy, img);
       super.useTime();
       super.giveStress();
-      // super.drawAvatar();
       super.updatePosition();
       super.changePicture();
       this.pictures = [
@@ -320,12 +309,9 @@ class MotherInLaw extends Bots {
          `../images/bots-pictures/pic-bot-madea-2-100.jpg`,
          `../images/bots-pictures/pic-bot-madea-3-100.jpg`,
       ];
-      this.avatar = `../images/bots-pictures/avatar-mil-madea.png`;
-      this.name = 'motherInLaw';
-      this.x = x;
-      this.dx = dx;
-      this.y = y;
-      this.dy = dy;
+      // this.name = 'motherInLaw';
+      // this.time = 5;
+      // this.stress = 30;
    }
 
    talk() {
@@ -350,26 +336,32 @@ class MotherInLaw extends Bots {
    }
 }
 
-function generateBots(botType, amount, dx, dy) {
+function generateBots(botType, amount, dx, dy, img) {
    var botGroup = [];
    for (var i = 0; i < amount; i++) {
       // create amount*bots with random coordinates and push them in the botGroup array
       var x = Math.random() * canvas.width;
       var y = Math.random() * canvas.height;
 
-      botGroup.push(new botType(x, y, dx, dy));
+      botGroup.push(new botType(x, y, dx, dy, img));
+   }
+   console.log('CREATED BOTS : ' + botGroup);
+
+   function animate(botCollection) {
+      // loop inside animate()
+      requestAnimationFrame(animate);
+
+      // update bots position and draw new position
+      botCollection.forEach((bot) => bot.updatePosition());
+
+      // update the player position when key pressed and draw new position
+      // document.onkeypress = player.move;
+
+      // clear canvas ????????
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
    }
 
-   console.log(botGroup);
-   return botGroup;
-}
-
-function animate(botCollection) {
-   botCollection.forEach((bot) => bot.updatePosition());
-   document.onkeypress = player.move;
-
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   requestAnimationFrame(animate); // loop inside the animate function
+   animate(botGroup);
 }
 
 /* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
@@ -390,7 +382,8 @@ const home = {
    avatar: `../images/places/home.png`,
 };
 
-function gameStatus() {   // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
+function gameStatus() {
+   // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
    const shadyGifs = [
       '../images/reactions-gif/gif-nailed-it-shady-sip.gif',
       '../images/reactions-gif/gif-go-away.gif',
@@ -469,7 +462,19 @@ function setDifficulty(event) {
    } */
 }
 
+function loadImage(url) {
+   return new Promise((resolve, reject) => {
+      var img = new Image(); // Crée un nouvel élément Image
+      img.src = url;
+      img.onload = function (evt) {
+         resolve(evt.path[0]);
+      };
+      img.onerror = (err) => reject(err);
+   });
+}
+
 function startGame() {
+   // changement d'interface
    var body = document.querySelector('body');
    var landingPage = document.querySelector('#landing-page-instructions');
    var mainElements = document.getElementsByClassName('main');
@@ -477,6 +482,7 @@ function startGame() {
    landingPage.style.display = 'none';
    [...mainElements].forEach((elem) => (elem.style.display = 'initial'));
 
+   // affichage du chrono
    function chronometerOn() {
       var time = document.getElementById('time');
       var currentTime = player.time;
@@ -492,6 +498,7 @@ function startGame() {
    }
    chronometerOn();
 
+   // affichage du niveau de stress
    function displayStress() {
       var stressLvl = document.getElementById('stress');
       if (player.stress >= 100) {
@@ -502,27 +509,47 @@ function startGame() {
    }
    displayStress();
 
-   window.onload = draw(university);
-   window.onload = draw(office);
-   window.onload = draw(home);
-   window.onload = draw(player);
+   // chargement des avatars
+   const load1 = loadImage(university.avatar);
+   const load2 = loadImage(office.avatar);
+   const load3 = loadImage(home.avatar);
+   const load4 = loadImage(player.avatar);
+   const load5 = loadImage('../images/bots-pictures/avatar-ex0.png');
+   const load6 = loadImage(`../images/bots-pictures/avatar-mil-madea.png`);
 
-   switch (levelDisplay.id) {
-      case 'level2':
-         animate(generateBots(ExLovers, 5, 4, 4));
-         animate(generateBots(MotherInLaw, 1, 6, 6));
-         break;
-      case 'level3':
-         animate(generateBots(ExLovers, 6, 5, 5));
-         animate(generateBots(MotherInLaw, 2, 6, 6));
-         break;
-      default:
-         // = level 1
-         animate(generateBots(ExLovers, 4, 3, 3));
-         animate(generateBots(MotherInLaw, 1, 5, 5));
-   }
+   // une fois toutes chargées, les images sont stockées dans de nouvelles variables
+   Promise.all([load1, load2, load3, load4, load5, load6])
+      .then((res) => {
+         university.img = res[0];
+         office.img = res[1];
+         home.img = res[2];
+         player.img = res[3];
 
-   // document.onkeypress = player.move;
+         draw(university);
+         draw(office);
+         draw(home);
+         draw(player);
+
+         // la création de bots est effectuée après que toutes les img aient été chargées puis dessinées
+         switch (levelDisplay.id) {
+            case 'level2':
+               generateBots(ExLovers, 5, 4, 4, res[4]);
+               generateBots(MotherInLaw, 1, 6, 6, res[5]);
+               break;
+            case 'level3':
+               generateBots(ExLovers, 6, 5, 5, res[4]);
+               generateBots(MotherInLaw, 2, 6, 6, res[5]);
+               break;
+            default:
+               // = level 1
+               generateBots(ExLovers, 4, 3, 3, res[4]);
+               generateBots(MotherInLaw, 1, 5, 5, res[5]);
+         }
+         console.log(res[5], res[6]);
+      })
+      .catch((err) => console.error(err));
+
+   document.onkeypress = player.move;
 }
 
 function resetGame() {
