@@ -109,7 +109,6 @@ const player = {
 
    move(event) {
       // equivalent de updatePosition() des bots
-      draw(player);
       switch (event.code) {
          case 'KeyW':
             if (player.y >= player.dy) {
@@ -163,14 +162,16 @@ const player = {
       }
    },
 
-   changePicture() {
+   changePlayerPicture() {
       if (this.stress <= 10) {
          this.picture = '../images/pic-tiffany-normal-100.png';
       } else if (this.stress > 10 && this.stress <= 40) {
          this.picture = '../images/pic-tiffany-mad-100.jpg';
       } else if (this.stress > 40 && this.stress <= 80) {
          this.picture = '../images/pic-tiffany-stresses-100.jpg';
-      } else this.picture = '../images/pic-tiffany-escaping-100x150.jpg';
+      } else {
+         this.picture = '../images/pic-tiffany-escaping-100x150.jpg';
+      }
 
       playerPic.setAttribute('src', `${this.picture}`);
    },
@@ -210,13 +211,10 @@ const player = {
 
 class Bots {
    constructor(x, y, dx, dy) {
-      // this.time = time;
-      // this.stress = stress;
-      // this.x = x;
-      // this.y = y;
-      // this.dx = dx;
-      // this.dy = dy;
-      // this.img = img;
+      this.x = x;
+      this.y = y;
+      this.dx = dx;
+      this.dy = dy;
    }
 
    updatePosition() {
@@ -230,43 +228,31 @@ class Bots {
       // move the bot
       this.x += this.dx;
       this.y += this.dy;
-
-      draw(this);
    }
 
-   changePicture() {
-      var randomPic = this.pictures[getRandomInt(this.pictures.length)];
+   changePicture(picturesArray) {
+      var randomPic = picturesArray[getRandomInt(picturesArray.length)];
       botTalkBox.innerHTML += `<img
       class="picture"
       id="picture-bot"
       style="display: none;"
       alt="bots pics"
-      src="${this.picture}"`;
-   }
-
-   useTime() {
-      return this.time;
-   }
-
-   giveStress() {
-      return this.stress;
+      src="${randomPic}"`;
    }
 }
 
 class ExLovers extends Bots {
    constructor(x, y, dx, dy, img) {
       super(x, y, dx, dy);
-      super.useTime();
-      super.giveStress();
       super.updatePosition();
-      super.changePicture();
+      // super.changePicture();
       this.pictures = [
          '../images/bots-pictures/pic-bot-ex-drake-100.jpg',
          '../images/bots-pictures/pic-bot-ex-laverne-100.jpg',
          '../images/bots-pictures/pic-bot-ex-laurence-100.jpg',
          '../images/bots-pictures/pic-bot-ex-meghan-100.jpg',
       ];
-      // this.img = img;
+      this.img = img;
       this.name = 'ex';
       this.time = 10;
       this.stress = 15;
@@ -293,25 +279,24 @@ class ExLovers extends Bots {
          }`;
       }, 4000);
 
-      player.answerTo(`${this.name}`);
+      player.answerTo(this.name);
    }
 }
 
 class MotherInLaw extends Bots {
    constructor(x, y, dx, dy, img) {
       super(x, y, dx, dy, img);
-      super.useTime();
-      super.giveStress();
       super.updatePosition();
-      super.changePicture();
+      // super.changePicture();
       this.pictures = [
          `../images/bots-pictures/pic-bot-madea-1-100.jpg`,
          `../images/bots-pictures/pic-bot-madea-2-100.jpg`,
          `../images/bots-pictures/pic-bot-madea-3-100.jpg`,
       ];
-      // this.name = 'motherInLaw';
-      // this.time = 5;
-      // this.stress = 30;
+      this.img = img;
+      this.name = 'motherInLaw';
+      this.time = 5;
+      this.stress = 30;
    }
 
    talk() {
@@ -332,36 +317,8 @@ class MotherInLaw extends Bots {
          }</p>`;
       }, 3500);
 
-      player.answerTo('motherInLaw');
+      player.answerTo(this.name);
    }
-}
-
-function generateBots(botType, amount, dx, dy, img) {
-   var botGroup = [];
-   for (var i = 0; i < amount; i++) {
-      // create amount*bots with random coordinates and push them in the botGroup array
-      var x = Math.random() * canvas.width;
-      var y = Math.random() * canvas.height;
-
-      botGroup.push(new botType(x, y, dx, dy, img));
-   }
-   console.log('CREATED BOTS : ' + botGroup);
-
-   function animate(botCollection) {
-      // loop inside animate()
-      requestAnimationFrame(animate);
-
-      // update bots position and draw new position
-      botCollection.forEach((bot) => bot.updatePosition());
-
-      // update the player position when key pressed and draw new position
-      // document.onkeypress = player.move;
-
-      // clear canvas ????????
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-   }
-
-   animate(botGroup);
 }
 
 /* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
@@ -382,8 +339,22 @@ const home = {
    avatar: `../images/places/home.png`,
 };
 
+// ------- functions used in the animation (every )
+
+function generateBots(botType, amount, dx, dy, img) {
+   var botGroup = [];
+   for (var i = 0; i < amount; i++) {
+      // create (amount * bots) with random coordinates and push them in the botGroup array
+      var x = Math.random() * canvas.width;
+      var y = Math.random() * canvas.height;
+
+      botGroup.push(new botType(x, y, dx, dy, img));
+   }
+   console.log('CREATED BOTS : ' + botGroup);
+   return botGroup;
+}
+
 function gameStatus() {
-   // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
    const shadyGifs = [
       '../images/reactions-gif/gif-nailed-it-shady-sip.gif',
       '../images/reactions-gif/gif-go-away.gif',
@@ -394,8 +365,8 @@ function gameStatus() {
    // check obstacles >> manage stress / time / discussions
    botGroup.forEach((bot) => {
       if (player.x === bot.x && player.y === bot.y) {
-         player.manageStress(bot.giveStress);
-         player.loseTime(bot.useTime);
+         player.manageStress(bot.stress);
+         player.loseTime(bot.time);
          bot.talk();
          gifReactions(shadyGifs[getRandomInt(shadyGifs.length)]);
       }
@@ -434,6 +405,22 @@ function gameStatus() {
    }
 }
 
+// -------
+
+function animate(botCollection) {
+   // clears the canvas
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   // updates bots position and draw new position
+   botCollection.forEach((bot) => {
+      bot.updatePosition();
+      draw(bot);
+   });
+   // draws current position of player
+   draw(player);
+   // gameStatus(botCollection); // check every game events (obstacles, accomplishments, time left)
+   // loop this function
+   requestAnimationFrame(() => animate(botCollection));
+}
 /* ---------- PAGE EVENTS ---------- */
 
 function definePlayerName(event) {
@@ -445,26 +432,11 @@ function definePlayerName(event) {
 
 function setDifficulty(event) {
    levelDisplay.innerText = `${event.target.textContent}`;
-   /* 
-   switch (event.target.id) {
-      case 'level2':
-         animate(generateBots(ExLovers, 5, 4, 4));
-         animate(generateBots(MotherInLaw, 1, 6, 6));
-         break;
-      case 'level3':
-         animate(generateBots(ExLovers, 6, 5, 5));
-         animate(generateBots(MotherInLaw, 2, 6, 6));
-         break;
-      default:
-         //LEVEL 1
-         animate(generateBots(ExLovers, 4, 3, 3));
-         animate(generateBots(MotherInLaw, 1, 5, 5));
-   } */
 }
 
 function loadImage(url) {
    return new Promise((resolve, reject) => {
-      var img = new Image(); // Crée un nouvel élément Image
+      var img = new Image();
       img.src = url;
       img.onload = function (evt) {
          resolve(evt.path[0]);
@@ -474,7 +446,8 @@ function loadImage(url) {
 }
 
 function startGame() {
-   // changement d'interface
+   // CHANGEMENT D'INTERFACE
+
    var body = document.querySelector('body');
    var landingPage = document.querySelector('#landing-page-instructions');
    var mainElements = document.getElementsByClassName('main');
@@ -482,7 +455,8 @@ function startGame() {
    landingPage.style.display = 'none';
    [...mainElements].forEach((elem) => (elem.style.display = 'initial'));
 
-   // affichage du chrono
+   // AFFICHAGE DU CHRONO
+
    function chronometerOn() {
       var time = document.getElementById('time');
       var currentTime = player.time;
@@ -498,7 +472,8 @@ function startGame() {
    }
    chronometerOn();
 
-   // affichage du niveau de stress
+   // AFFICHAGE NIVEAU DE STRESS
+
    function displayStress() {
       var stressLvl = document.getElementById('stress');
       if (player.stress >= 100) {
@@ -509,7 +484,8 @@ function startGame() {
    }
    displayStress();
 
-   // chargement des avatars
+   // CHARGEMENT DES AVATARS
+
    const load1 = loadImage(university.avatar);
    const load2 = loadImage(office.avatar);
    const load3 = loadImage(home.avatar);
@@ -517,7 +493,8 @@ function startGame() {
    const load5 = loadImage('../images/bots-pictures/avatar-ex0.png');
    const load6 = loadImage(`../images/bots-pictures/avatar-mil-madea.png`);
 
-   // une fois toutes chargées, les images sont stockées dans de nouvelles variables
+   // CHARGEMENT DES IMAGES DANS DE NOUVELLES VARIABLES (une fois toutes chargées)
+
    Promise.all([load1, load2, load3, load4, load5, load6])
       .then((res) => {
          university.img = res[0];
@@ -531,20 +508,32 @@ function startGame() {
          draw(player);
 
          // la création de bots est effectuée après que toutes les img aient été chargées puis dessinées
+
+         let exLovers;
+         let mothersInLaw;
+         let allBots;
+
          switch (levelDisplay.id) {
             case 'level2':
-               generateBots(ExLovers, 5, 4, 4, res[4]);
-               generateBots(MotherInLaw, 1, 6, 6, res[5]);
+               exLovers = generateBots(ExLovers, 5, 4, 4, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 3, 6, 6, res[5]);
+               allBots = exLovers.concat(mothersInLaw);
+               animate(allBots);
                break;
             case 'level3':
-               generateBots(ExLovers, 6, 5, 5, res[4]);
-               generateBots(MotherInLaw, 2, 6, 6, res[5]);
+               exLovers = generateBots(ExLovers, 6, 5, 5, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 2, 6, 6, res[5]);
+               allBots = exLovers.concat(mothersInLaw);
+               animate(allBots);
                break;
             default:
                // = level 1
-               generateBots(ExLovers, 4, 3, 3, res[4]);
-               generateBots(MotherInLaw, 1, 5, 5, res[5]);
+               exLovers = generateBots(ExLovers, 4, 3, 3, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 1, 5, 5, res[5]);
+               allBots = exLovers.concat(mothersInLaw);
+               animate(allBots);
          }
+
          console.log(res[5], res[6]);
       })
       .catch((err) => console.error(err));
