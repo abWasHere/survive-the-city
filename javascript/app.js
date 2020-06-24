@@ -101,10 +101,10 @@ const player = {
    stress: 10,
    pictures: '../images/pic-tiffany-normal-100.png',
    avatar: '../images/avatar-player-tiffany-50.jpg',
-   x: 10,
-   y: 10,
-   dx: 4, // pas de vélocité en abscisses
-   dy: 4, // pas de vélocité en ordonnées
+   x: 130,
+   y: 40,
+   dx: 7, // pas de vélocité en abscisses
+   dy: 7, // pas de vélocité en ordonnées
    accomplishment: 0,
 
    move(event) {
@@ -219,10 +219,10 @@ class Bots {
 
    updatePosition() {
       // change the direction
-      if (this.x + this.dx > canvas.width || this.x - this.dx < 0) {
+      if (this.x + this.dx > canvas.width || this.x + this.dx < 0) {
          this.dx = -this.dx; // sur l'axe des x
       }
-      if (this.y + this.dy > canvas.height || this.y - this.dy < 0) {
+      if (this.y + this.dy > canvas.height || this.y + this.dy < 0) {
          this.dy = -this.dy; // sur l'axe des y
       }
       // move the bot
@@ -321,25 +321,7 @@ class MotherInLaw extends Bots {
    }
 }
 
-/* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
-
-const university = {
-   x: 300,
-   y: 10,
-   avatar: `../images/places/university.png`,
-};
-const office = {
-   x: 50,
-   y: 300,
-   avatar: `../images/places/office.png`,
-};
-const home = {
-   x: 700,
-   y: 300,
-   avatar: `../images/places/home.png`,
-};
-
-// ------- functions used in the animation (every )
+// ------- functions used in the animation
 
 function generateBots(botType, amount, dx, dy, img) {
    var botGroup = [];
@@ -415,12 +397,32 @@ function animate(botCollection) {
       bot.updatePosition();
       draw(bot);
    });
-   // draws current position of player
+   // draws player and objectives
    draw(player);
+   draw(university);
+   draw(office);
+   draw(home);
    // gameStatus(botCollection); // check every game events (obstacles, accomplishments, time left)
    // loop this function
    requestAnimationFrame(() => animate(botCollection));
 }
+/* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
+
+const university = {
+   x: 300,
+   y: 10,
+   avatar: `../images/places/university.png`,
+};
+const office = {
+   x: 50,
+   y: 300,
+   avatar: `../images/places/office.png`,
+};
+const home = {
+   x: 700,
+   y: 300,
+   avatar: `../images/places/home.png`,
+};
 /* ---------- PAGE EVENTS ---------- */
 
 function definePlayerName(event) {
@@ -513,28 +515,26 @@ function startGame() {
          let mothersInLaw;
          let allBots;
 
-         switch (levelDisplay.id) {
-            case 'level2':
-               exLovers = generateBots(ExLovers, 5, 4, 4, res[4]);
-               mothersInLaw = generateBots(MotherInLaw, 3, 6, 6, res[5]);
+         switch (levelDisplay.innerText) {
+            case 'CHALLENGING':
+               exLovers = generateBots(ExLovers, 3, 3, 3, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 1, 4, 4, res[5]);
                allBots = exLovers.concat(mothersInLaw);
                animate(allBots);
                break;
-            case 'level3':
-               exLovers = generateBots(ExLovers, 6, 5, 5, res[4]);
-               mothersInLaw = generateBots(MotherInLaw, 2, 6, 6, res[5]);
+            case 'HAAAARD':
+               exLovers = generateBots(ExLovers, 4, 3, 3, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 2, 4, 4, res[5]);
                allBots = exLovers.concat(mothersInLaw);
                animate(allBots);
                break;
             default:
-               // = level 1
-               exLovers = generateBots(ExLovers, 4, 3, 3, res[4]);
+               // = 'CHILL'
+               exLovers = generateBots(ExLovers, 2, 2, 2, res[4]);
                mothersInLaw = generateBots(MotherInLaw, 1, 5, 5, res[5]);
                allBots = exLovers.concat(mothersInLaw);
                animate(allBots);
          }
-
-         console.log(res[5], res[6]);
       })
       .catch((err) => console.error(err));
 
