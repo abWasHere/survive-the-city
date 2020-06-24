@@ -225,11 +225,12 @@ input#landing-player-name {
 /* ------- PLAYGROUND --------- */
 
 #game-interface {
-   background-color: grey;
+   background: url('./images/places/doodle-city-map.jpg');
+   background-size: cover;
    height: 450px;
    width: 100%;
    text-align: center;
-   border: 5mm inset rgba(49, 47, 49, 0.856);
+   border: 5mm inset rgba(49, 47, 49);
 }
 /* 
 #canvas {

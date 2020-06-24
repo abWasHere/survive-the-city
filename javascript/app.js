@@ -4,6 +4,7 @@ const gotItBtn = document.getElementById('landing-button-ok');
 const level1Btn = document.getElementById('level1');
 const level2Btn = document.getElementById('level2');
 const level3Btn = document.getElementById('level3');
+const levelDisplay = document.getElementById('level-display');
 const resetBtn = document.getElementById('reset-button');
 
 /* ---------- DOM PLAYERS */
@@ -11,9 +12,10 @@ const playerPic = document.getElementById('picture-player');
 const botPic = document.getElementById('picture-bot');
 const playerAnswers = document.getElementById('player-answers');
 const botSpeech = document.getElementById('bot-speech');
+const botTalkBox = document.getElementById('bot-talks');
 const gifReaction = document.getElementById('gif-reaction');
 
-/* ---------- CANVAS */
+/* ---------- CANVAS ---------- */
 
 // var canvasContainer = document.getElementById('game-interface');
 var canvas = document.getElementById('canvas');
@@ -23,7 +25,18 @@ canvas.height = 415;
 var ctx = canvas.getContext('2d');
 console.log(canvas.height);
 
-/* ---------- GLOBAL FUNCTIONS */
+function draw(obj) {
+   ctx.beginPath();
+   var img = new Image(); // Crée un nouvel élément Image
+   img.onload = function () {
+      ctx.drawImage(img, obj.x, obj.y, 45, 45);
+   };
+   img.src = `${obj.avatar}`;
+
+   ctx.closePath();
+}
+
+/* ---------- GLOBAL FUNCTIONS ---------- */
 
 function getRandomInt(nb) {
    return Math.floor(Math.random() * Math.floor(nb));
@@ -72,6 +85,7 @@ function gameOver(reason) {
 
 function winGame() {
    console.log('YOU WIN');
+
    const gifWin = [
       `../images/reactions-gif/tiffany-dance-wine-home.gif`,
       `../images/reactions-gif/tiffany-made-it.gif`,
@@ -82,9 +96,7 @@ function winGame() {
    closePlayground('NAILED IT !!!!!!', gifWin.getRandomInt(gifWin.length));
 }
 
-/* ------------------- CANVAS - DEPLACEMENTS */
-
-/* ---------- PLAYERS */
+/* ---------- PLAYER AND BOTS ---------- */
 
 const player = {
    time: 100,
@@ -95,6 +107,37 @@ const player = {
    y: 10,
    dx: 4, // pas de vélocité en abscisses
    dy: 4, // pas de vélocité en ordonnées
+   accomplishment: 0,
+
+   move(event) {
+      // equivalent de updatePosition() des bots
+      draw(player);
+      switch (event.code) {
+         case 'KeyW':
+            if (player.y >= player.dy) {
+               player.y -= player.dy;
+            }
+            console.log('player has moved UP');
+            break;
+         case 'KeyS':
+            if (player.y < canvas.height - player.dy - 42)
+               // chiffre trouvé après test console...
+               player.y += player.dy;
+            console.log('player has moved DOWN');
+            break;
+         case 'KeyA':
+            if (player.x >= player.dx) player.x -= player.dx;
+            console.log('player has moved LEFT');
+            break;
+         case 'KeyD':
+            if (player.x < canvas.width - player.dx - 30) player.x += player.dx;
+            console.log('player has moved RIGHT');
+            break;
+         default:
+            alert('please type a valid key : Z - Q - S - D');
+      }
+      console.log(`player position is x : ${player.x}, y : ${player.y}`);
+   },
 
    loseTime(usage) {
       this.time -= usage;
@@ -165,46 +208,6 @@ const player = {
        </p>`;
       }, 5500);
    },
-
-   drawAvatar() {
-      ctx.beginPath();
-      var img = new Image(); // Crée un nouvel élément Image
-      img.onload = function () {
-         ctx.drawImage(img, player.x, player.y, 30, 40);
-      };
-      img.src = `${player.avatar}`;
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-      ctx.closePath();
-   },
-
-   move(event) {
-      player.drawAvatar();
-      switch (event.code) {
-         case 'KeyW':
-            if (player.y >= player.dy) {
-               player.y -= player.dy;
-            }
-            console.log('player has moved UP');
-            break;
-         case 'KeyS':
-            if (player.y < canvas.height - player.dy - 42)
-               // chiffre trouvé après test console...
-               player.y += player.dy;
-            console.log('player has moved DOWN');
-            break;
-         case 'KeyA':
-            if (player.x >= player.dx) player.x -= player.dx;
-            console.log('player has moved LEFT');
-            break;
-         case 'KeyD':
-            if (player.x < canvas.width - player.dx - 30) player.x += player.dx;
-            console.log('player has moved RIGHT');
-            break;
-         default:
-            alert('please type a valid key : Z - Q - S - D');
-      }
-      console.log(`player position is x : ${player.x}, y : ${player.y}`);
-   },
 };
 
 class Bots {
@@ -221,30 +224,27 @@ class Bots {
 
    changePicture() {
       var randomPic = this.pictures[getRandomInt(this.pictures.length)];
-      botPic.setAttribute('src', `${randomPic}`);
-      botPic.removeAttribute('style');
-   }
-
-   drawAvatar() {
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(255,0,0,.5)';
-      ctx.fillRect(this.x, this.y, 20, 20);
-      ctx.closePath();
+      botTalkBox.innerHTML += `<img
+      class="picture"
+      id="picture-bot"
+      style="display: none;"
+      alt="bots pics"
+      src="${this.picture}"`;
    }
 
    updatePosition() {
-      this.drawAvatar();
-
       // change the direction
-      if (this.x + this.dx > innerWidth || this.x - this.dx < 0) {
+      if (this.x + this.dx > canvas.width || this.x - this.dx < 0) {
          this.dx = -this.dx; // sur l'axe des x
       }
-      if (this.y + this.dy > innerHeight || this.y - this.dy < 0) {
+      if (this.y + this.dy > canvas.height || this.y - this.dy < 0) {
          this.dy = -this.dy; // sur l'axe des y
       }
       // move the bot
       this.x += this.dx;
       this.y += this.dy;
+
+      draw(this);
    }
 
    useTime() {
@@ -260,7 +260,7 @@ class ExLovers extends Bots {
       super(x, y, dx, dy);
       super.useTime();
       super.giveStress();
-      super.drawAvatar();
+      // super.drawAvatar();
       super.updatePosition();
       super.changePicture();
       this.pictures = [
@@ -312,7 +312,7 @@ class MotherInLaw extends Bots {
       super(x, y, dx, dy);
       super.useTime();
       super.giveStress();
-      super.drawAvatar();
+      // super.drawAvatar();
       super.updatePosition();
       super.changePicture();
       this.pictures = [
@@ -351,32 +351,85 @@ class MotherInLaw extends Bots {
 }
 
 function generateBots(botType, amount, dx, dy) {
-   // player.drawAvatar();
-
    var botGroup = [];
    for (var i = 0; i < amount; i++) {
       // create amount*bots with random coordinates and push them in the botGroup array
-      var x = Math.random() * (canvas.width - dx);
-      var y = Math.random() * (canvas.height - dy);
+      var x = Math.random() * canvas.width;
+      var y = Math.random() * canvas.height;
+
       botGroup.push(new botType(x, y, dx, dy));
    }
 
    console.log(botGroup);
-   console.log(canvas.width);
-
-   function animate() {
-      requestAnimationFrame(animate); // create a loop inside the animate function
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Erase whole canvas
-
-      botGroup.forEach((bot) => bot.updatePosition());
-   }
-
-   animate();
+   return botGroup;
 }
 
-/* ---------- CANVAS */
+function animate(botCollection) {
+   botCollection.forEach((bot) => bot.updatePosition());
+   document.onkeypress = player.move;
 
-/* ---------- LANDING PAGE EVENTS */
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   requestAnimationFrame(animate); // loop inside the animate function
+}
+
+/* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
+
+const university = {
+   x: 300,
+   y: 10,
+   avatar: `../images/places/university.png`,
+};
+const office = {
+   x: 50,
+   y: 300,
+   avatar: `../images/places/office.png`,
+};
+const home = {
+   x: 700,
+   y: 300,
+   avatar: `../images/places/home.png`,
+};
+
+function gameStatus() { // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
+
+   botGroup.forEach((bot) => {
+      if (player.x === bot.x && player.y === bot.y) {
+         player.manageStress(bot.giveStress);
+         player.loseTime(bot.useTime);
+      }
+   });
+
+   if (player.time === 0) {
+      gameOver('no time left');
+   }
+
+   // university accomplishment
+   if (
+      player.x === university.x &&
+      player.y === university.y &&
+      player.accomplishment === 0
+   ) {
+      player.accomplishment += 1;
+   }
+   // job accomplishment
+   if (
+      player.x === office.x &&
+      player.y === office.y &&
+      player.accomplishment === 1
+   ) {
+      player.accomplishment += 2;
+   }
+   //  home accomplishment
+   if (
+      player.x === home.x &&
+      player.y === home.y &&
+      player.accomplishment === 3
+   ) {
+      winGame();
+   }
+}
+
+/* ---------- PAGE EVENTS ---------- */
 
 function definePlayerName(event) {
    var name = document.querySelectorAll('.player-name');
@@ -386,50 +439,26 @@ function definePlayerName(event) {
 }
 
 function setDifficulty(event) {
-   var levelDisplay = document.getElementById('level-display');
    levelDisplay.innerText = `${event.target.textContent}`;
-
+   /* 
    switch (event.target.id) {
       case 'level2':
-         generateBots(ExLovers, 8, 5, 5);
-         generateBots(MotherInLaw, 1, 7, 7);
+         animate(generateBots(ExLovers, 5, 4, 4));
+         animate(generateBots(MotherInLaw, 1, 6, 6));
          break;
       case 'level3':
-         generateBots(ExLovers, 8, 7, 7);
-         generateBots(MotherInLaw, 2, 10, 10);
+         animate(generateBots(ExLovers, 6, 5, 5));
+         animate(generateBots(MotherInLaw, 2, 6, 6));
          break;
       default:
          //LEVEL 1
-         generateBots(ExLovers, 5, 4, 4);
-         generateBots(MotherInLaw, 1, 6, 6);
-   }
-}
-
-function chronometerOn() {
-   var time = document.getElementById('time');
-   var currentTime = player.time;
-
-   let intervalId = setInterval(() => {
-      time.innerHTML = `${currentTime}`;
-      player.time = currentTime;
-      if (currentTime <= 0) {
-         clearInterval(intervalId);
-      }
-      currentTime--;
-   }, 1000);
-}
-
-function displayStress() {
-   var stressLvl = document.getElementById('stress');
-   if (player.stress >= 100) {
-      stressLvl.innerHTML = `I CAN'T !`;
-   } else {
-      stressLvl.innerHTML = `${player.stress}`;
-   }
+         animate(generateBots(ExLovers, 4, 3, 3));
+         animate(generateBots(MotherInLaw, 1, 5, 5));
+   } */
 }
 
 function startGame() {
-   // DOIT RECEVOIR TOUTES LES FONCTIONS DE LANCEMENT DE JEU !
+
    var body = document.querySelector('body');
    var landingPage = document.querySelector('#landing-page-instructions');
    var mainElements = document.getElementsByClassName('main');
@@ -437,12 +466,52 @@ function startGame() {
    landingPage.style.display = 'none';
    [...mainElements].forEach((elem) => (elem.style.display = 'initial'));
 
+   function chronometerOn() {
+      var time = document.getElementById('time');
+      var currentTime = player.time;
+
+      let intervalId = setInterval(() => {
+         time.innerHTML = `${currentTime}`;
+         player.time = currentTime;
+         if (currentTime <= 0) {
+            clearInterval(intervalId);
+         }
+         currentTime--;
+      }, 1000);
+   }
    chronometerOn();
+
+   function displayStress() {
+      var stressLvl = document.getElementById('stress');
+      if (player.stress >= 100) {
+         stressLvl.innerHTML = `I CAN'T !`;
+      } else {
+         stressLvl.innerHTML = `${player.stress}`;
+      }
+   }
    displayStress();
 
-   player.drawAvatar();
+   window.onload = draw(university);
+   window.onload = draw(office);
+   window.onload = draw(home);
+   window.onload = draw(player);
 
-   document.onkeypress = player.move;
+   switch (levelDisplay.id) {
+      case 'level2':
+         animate(generateBots(ExLovers, 5, 4, 4));
+         animate(generateBots(MotherInLaw, 1, 6, 6));
+         break;
+      case 'level3':
+         animate(generateBots(ExLovers, 6, 5, 5));
+         animate(generateBots(MotherInLaw, 2, 6, 6));
+         break;
+      default:
+         // = level 1
+         animate(generateBots(ExLovers, 4, 3, 3));
+         animate(generateBots(MotherInLaw, 1, 5, 5));
+   }
+
+   // document.onkeypress = player.move;
 }
 
 function resetGame() {
@@ -450,7 +519,7 @@ function resetGame() {
    document.location.reload(true);
 }
 
-/* ---------- LISTENERS */
+/* ---------- LISTENERS ---------- */
 
 playerName.addEventListener('change', definePlayerName);
 gotItBtn.addEventListener('click', startGame);
