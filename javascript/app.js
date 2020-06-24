@@ -84,23 +84,13 @@ function winGame() {
 
 /* ------------------- CANVAS - DEPLACEMENTS */
 
-function loadAvatar(person) {
-   var img = new Image(); // Crée un nouvel élément Image
-   ctx.beginPath();
-   img.onload = function () {
-      ctx.drawImage(img, person.x, person.y, 30, 40);
-   };
-   ctx.clearRect(0, 0, innerWidth, innerHeight);
-   img.src = `${person.avatars}`;
-}
-
 /* ---------- PLAYERS */
 
 const player = {
    time: 100,
    stress: 10,
    pictures: '../images/pic-tiffany-normal-100.png',
-   avatars: '../images/avatar-player-tiffany-50.jpg',
+   avatar: '../images/avatar-player-tiffany-50.jpg',
    x: 10,
    y: 10,
    dx: 4, // pas de vélocité en abscisses
@@ -176,8 +166,19 @@ const player = {
       }, 5500);
    },
 
+   drawAvatar() {
+      ctx.beginPath();
+      var img = new Image(); // Crée un nouvel élément Image
+      img.onload = function () {
+         ctx.drawImage(img, player.x, player.y, 30, 40);
+      };
+      img.src = `${player.avatar}`;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.closePath();
+   },
+
    move(event) {
-      loadAvatar(player);
+      player.drawAvatar();
       switch (event.code) {
          case 'KeyW':
             if (player.y >= player.dy) {
@@ -186,7 +187,8 @@ const player = {
             console.log('player has moved UP');
             break;
          case 'KeyS':
-            if (player.y < canvas.height - player.dy - 42) // chiffre trouvé après test console...
+            if (player.y < canvas.height - player.dy - 42)
+               // chiffre trouvé après test console...
                player.y += player.dy;
             console.log('player has moved DOWN');
             break;
@@ -206,7 +208,7 @@ const player = {
 };
 
 class Bots {
-   constructor(time, stress, x, y, dx, dy, pictures, avatars) {
+   constructor(time, stress, x, y, dx, dy, pictures, avatar) {
       this.time = time;
       this.stress = stress;
       this.x = x;
@@ -214,27 +216,35 @@ class Bots {
       this.dx = dx;
       this.dy = dy;
       this.pictures = [pictures];
-      this.avatars = [avatars];
+      this.avatar = avatar;
    }
+
    changePicture() {
       var randomPic = this.pictures[getRandomInt(this.pictures.length)];
       botPic.setAttribute('src', `${randomPic}`);
       botPic.removeAttribute('style');
    }
 
-   move() {
-      // change the coordinates
+   drawAvatar() {
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,0,0,.5)';
+      ctx.fillRect(this.x, this.y, 20, 20);
+      ctx.closePath();
+   }
+
+   updatePosition() {
+      this.drawAvatar();
+
+      // change the direction
       if (this.x + this.dx > innerWidth || this.x - this.dx < 0) {
-         this.dx = -this.dx; // on change de sens sur l'axe des x
+         this.dx = -this.dx; // sur l'axe des x
       }
       if (this.y + this.dy > innerHeight || this.y - this.dy < 0) {
-         this.dy = -this.dy; // on change de sens sur l'axe des y
+         this.dy = -this.dy; // sur l'axe des y
       }
-      // incrémente les coordonnées des bots
+      // move the bot
       this.x += this.dx;
       this.y += this.dy;
-
-      loadAvatar(this);
    }
 
    useTime() {
@@ -250,7 +260,8 @@ class ExLovers extends Bots {
       super(x, y, dx, dy);
       super.useTime();
       super.giveStress();
-      super.move();
+      super.drawAvatar();
+      super.updatePosition();
       super.changePicture();
       this.pictures = [
          '../images/bots-pictures/pic-bot-ex-drake-100.jpg',
@@ -258,16 +269,21 @@ class ExLovers extends Bots {
          '../images/bots-pictures/pic-bot-ex-laurence-100.jpg',
          '../images/bots-pictures/pic-bot-ex-meghan-100.jpg',
       ];
-      this.avatars = [
+      /* this.avatars = [
          '../images/bots-pictures/avatar-ex0.png',
          '../images/bots-pictures/avatar-ex1.png',
          '../images/bots-pictures/avatar-ex2.png',
          '../images/bots-pictures/avatar-ex3.png',
          '../images/bots-pictures/avatar-ex4.png',
-      ];
+      ]; */
+      this.avatar = '../images/bots-pictures/avatar-ex0.png';
       this.name = 'ex';
       this.time = 10;
-      this.stress = 10;
+      this.stress = 15;
+      this.x = x;
+      this.dx = dx;
+      this.y = y;
+      this.dy = dy;
    }
 
    talk() {
@@ -296,7 +312,8 @@ class MotherInLaw extends Bots {
       super(x, y, dx, dy);
       super.useTime();
       super.giveStress();
-      super.move();
+      super.drawAvatar();
+      super.updatePosition();
       super.changePicture();
       this.pictures = [
          `../images/bots-pictures/pic-bot-madea-1-100.jpg`,
@@ -305,6 +322,10 @@ class MotherInLaw extends Bots {
       ];
       this.avatar = `../images/bots-pictures/avatar-mil-madea.png`;
       this.name = 'motherInLaw';
+      this.x = x;
+      this.dx = dx;
+      this.y = y;
+      this.dy = dy;
    }
 
    talk() {
@@ -330,24 +351,27 @@ class MotherInLaw extends Bots {
 }
 
 function generateBots(botType, amount, dx, dy) {
+   // player.drawAvatar();
+
    var botGroup = [];
-
    for (var i = 0; i < amount; i++) {
-      // create 50 circles with random coordinates and push them in the circleArray
-      var x = Math.random() * (innerWidth - dx) + dx;
-      var y = Math.random() * (innerHeight - dy) + dy;
-
+      // create amount*bots with random coordinates and push them in the botGroup array
+      var x = Math.random() * (canvas.width - dx);
+      var y = Math.random() * (canvas.height - dy);
       botGroup.push(new botType(x, y, dx, dy));
    }
 
+   console.log(botGroup);
+   console.log(canvas.width);
+
    function animate() {
       requestAnimationFrame(animate); // create a loop inside the animate function
-      c.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Erase whole canvas
 
-      for (let i = 0; i < botGroup.length; i++) {
-         botGroup[i].move();
-      }
+      botGroup.forEach((bot) => bot.updatePosition());
    }
+
+   animate();
 }
 
 /* ---------- CANVAS */
@@ -367,16 +391,16 @@ function setDifficulty(event) {
 
    switch (event.target.id) {
       case 'level2':
-         generateBots(ExLovers, 8, 7, 7);
-         generateBots(MotherInLaw, 1, 8, 8);
+         generateBots(ExLovers, 8, 5, 5);
+         generateBots(MotherInLaw, 1, 7, 7);
          break;
       case 'level3':
-         generateBots(ExLovers, 8, 8, 8);
+         generateBots(ExLovers, 8, 7, 7);
          generateBots(MotherInLaw, 2, 10, 10);
          break;
       default:
          //LEVEL 1
-         generateBots(ExLovers, 5, 5, 5);
+         generateBots(ExLovers, 5, 4, 4);
          generateBots(MotherInLaw, 1, 6, 6);
    }
 }
@@ -409,7 +433,6 @@ function startGame() {
    var body = document.querySelector('body');
    var landingPage = document.querySelector('#landing-page-instructions');
    var mainElements = document.getElementsByClassName('main');
-
    body.classList.toggle('cleaned');
    landingPage.style.display = 'none';
    [...mainElements].forEach((elem) => (elem.style.display = 'initial'));
@@ -417,7 +440,7 @@ function startGame() {
    chronometerOn();
    displayStress();
 
-   loadAvatar(player);
+   player.drawAvatar();
 
    document.onkeypress = player.move;
 }
