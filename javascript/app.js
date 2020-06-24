@@ -390,15 +390,25 @@ const home = {
    avatar: `../images/places/home.png`,
 };
 
-function gameStatus() { // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
+function gameStatus() {   // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
+   const shadyGifs = [
+      '../images/reactions-gif/gif-nailed-it-shady-sip.gif',
+      '../images/reactions-gif/gif-go-away.gif',
+      '../images/reactions-gif/gif-smh-insecure.gif',
+      '../images/reactions-gif/gif-nailed-it-laugh.gif',
+   ];
 
+   // check obstacles >> manage stress / time / discussions
    botGroup.forEach((bot) => {
       if (player.x === bot.x && player.y === bot.y) {
          player.manageStress(bot.giveStress);
          player.loseTime(bot.useTime);
+         bot.talk();
+         gifReactions(shadyGifs[getRandomInt(shadyGifs.length)]);
       }
    });
 
+   // checks chronometer
    if (player.time === 0) {
       gameOver('no time left');
    }
@@ -409,6 +419,7 @@ function gameStatus() { // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
       player.y === university.y &&
       player.accomplishment === 0
    ) {
+      gifReactions('../images/reactions-gif/gif-graduated.gif');
       player.accomplishment += 1;
    }
    // job accomplishment
@@ -417,6 +428,7 @@ function gameStatus() { // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
       player.y === office.y &&
       player.accomplishment === 1
    ) {
+      gifReactions('../images/reactions-gif/gif-get-it-girl.gif');
       player.accomplishment += 2;
    }
    //  home accomplishment
@@ -458,7 +470,6 @@ function setDifficulty(event) {
 }
 
 function startGame() {
-
    var body = document.querySelector('body');
    var landingPage = document.querySelector('#landing-page-instructions');
    var mainElements = document.getElementsByClassName('main');
