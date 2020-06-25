@@ -32,6 +32,7 @@ body {
    width: 820px;
    height: fit-content;
    margin: auto;
+   margin-top: 10px;
    overflow: hidden;
    background: linear-gradient(
       0deg,
@@ -56,7 +57,7 @@ body {
 
 /* LANDING PAGE DISPLAYS */
 
-body .main {
+body .invisible {
    /* STYLE DISPLAY: INITIAL AU LANCEMENT DU JEU */
    display: none;
 }
@@ -72,8 +73,7 @@ body.cleaned {
    /* DISPLAY NONE AU DEMARRAGE DU JEU */
    flex-direction: column;
    justify-content: center;
-   margin: 30px 0px;
-   padding: 30px;
+   padding: 20px;
    text-align: justify;
    background-color: rgba(0, 0, 0, 0.486);
 }
@@ -238,7 +238,7 @@ input#landing-player-name {
    justify-content: center;
    align-items: center;
    height: 100%;
-   color: rgba(247, 0, 255, 0.459);
+   color: rgba(247, 0, 255, 0.534);
    text-shadow: rgba(0, 0, 0, 0.822) 5px 5px;
    font-size: 50px;
 }
@@ -302,25 +302,25 @@ input#landing-player-name {
    color: inherit;
 }
 
-/* ------- FOOTER ------- */
- 
+/* ------- SOUND PANEL ------- */
+
 audio {
    position: absolute;
-   bottom: 10px;
-   left: 100px;
+   bottom: 30px;
+   left: 150px;
    width: 100px;
    height: 70px;
-   -webkit-appearance:none;
-} 
+   -webkit-appearance: none;
+}
 
 audio::-webkit-media-controls-overlay-enclosure,
-audio::-webkit-media-controls-current-time-display, 
+audio::-webkit-media-controls-current-time-display,
 audio::-webkit-media-controls-time-remaining-display,
 audio::-webkit-media-controls-timeline,
 audio::-webkit-media-controls-toggle-closed-captions-button {
    display: none;
-} 
+}
 
-audio::-webkit-media-controls-panel{
-   background-color:rgba(102, 10, 110, 0.486);
+audio::-webkit-media-controls-panel {
+   background-color: rgba(102, 10, 110, 0.486);
 }

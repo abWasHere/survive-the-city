@@ -47,43 +47,41 @@
          </button>
       </div>
 
-      <header class="main" id="header-main">
+      <header class="invisible" id="header-main">
          <h1>SURVIVE THE CITY</h1>
       </header>
 
-      <div class="main" id="wrap-main">
+      <div class="invisible" id="wrap-main">
          <div id="game-talks" class="flex">
             <div id="player-talks" class="talks-box flex">
                <img
                   class="picture"
                   id="picture-player"
                   src="./images/pic-tiffany-normal-100.png"
-                  alt="gif"
+                  alt="pic of player"
                />
-               <div id="player-answers">
-                  <!-- <p class="talks"></p> -->
-               </div>
+               <div id="player-answers"></div>
             </div>
 
             <div id="bot-talks" class="talks-box flex">
                <div id="bot-speech"></div>
-               <!-- <img
+               <img
                   class="picture"
                   id="picture-bot"
-                  style="display: none;"
                   alt="bots pics"
-               /> -->
+                  src="https://img.icons8.com/ios-filled/50/000000/decision.png"
+               />
             </div>
          </div>
 
          <div id="game-infos" class="flex">
             <p class="text-main">PLAYER: <i class="player-name">You</i></p>
             <p class="text-main">
-               <i class="fas fa-heartbeat"></i> TIME LEFT
+               <i class="fas fa-hourglass-half"></i> TIME LEFT
                <b id="time"></b>
             </p>
             <p class="text-main">
-               <i class="fas fa-smog"></i> STRESS
+               <i class="fas fa-heartbeat"></i> STRESS
                <b id="stress"> </b>
             </p>
             <p class="text-main">DIFFICULTY <b id="level-display">CHILL</b></p>
@@ -106,32 +104,32 @@
             />
             <button class="button" id="reset-button">RESET GAME</button>
          </div>
-
-         <footer id="footer" class="flex">
-            <p class="footer-text"><b>created by Audrey Belson</b></p>
-            <ul class="list flex">
-               <li class="item">
-                  <a
-                     href="https://github.com/abWasHere"
-                     class="link"
-                     target="_blank"
-                     ><i class="fab fa-github"></i
-                  ></a>
-               </li>
-               <li class="item">
-                  <a
-                     href="https://www.linkedin.com/in/audrey-belson-28382958/"
-                     class="link"
-                     target="_blank"
-                     ><i class="fab fa-linkedin-in"></i
-                  ></a>
-               </li>
-            </ul>
-         </footer>
       </div>
-      <audio controls loop controlsList='nodownload'>
-         <source src="./audio/theme-song.mp3" type="audio/mp3"> 
-         <source src="./audio/theme-song.ogg" type="audio/ogg"> 
+
+      <footer id="footer" class="flex">
+         <p class="footer-text"><b>created by Audrey Belson</b></p>
+         <ul class="list flex">
+            <li class="item">
+               <a
+                  href="https://github.com/abWasHere"
+                  class="link"
+                  target="_blank"
+                  ><i class="fab fa-github"></i
+               ></a>
+            </li>
+            <li class="item">
+               <a
+                  href="https://www.linkedin.com/in/audrey-belson-28382958/"
+                  class="link"
+                  target="_blank"
+                  ><i class="fab fa-linkedin-in"></i
+               ></a>
+            </li>
+         </ul>
+      </footer>
+      <audio id="audio-files" controls loop controlsList="nodownload">
+         <source src="./audio/theme-song.mp3" type="audio/mp3" />
+         <source src="./audio/theme-song.ogg" type="audio/ogg" />
       </audio>
    </body>
 </html>
