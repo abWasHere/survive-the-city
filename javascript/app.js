@@ -107,8 +107,8 @@ function winGame(you) {
 /* ---------- PLAYER AND BOTS ---------- */
 
 const player = {
-   time: 15,
-   stress: 10,
+   time: 100,
+   stress: 0,
    pictures: '../images/pic-tiffany-normal-100.png',
    avatar: '../images/avatar-player-tiffany-50.jpg',
    x: 130,
@@ -163,14 +163,13 @@ const player = {
    manageStress(effect) {
       player.stress += effect;
       if (player.stress >= 100) {
-         gameOver('to much stress', player);
-         cancelAnimationFrame(myReq); // stop bots animation
+         player.stress = 100;
+         playerAnswers.innerHTML = `<p class="talks">I CAN'T !</p>`;
       } else if (player.stress < 0) {
-         playerAnswers.innerHTML = `<p class="talks">Living my best life !</p>`;
          player.stress = 0;
-      } else {
+      } /* else {
          player.stress;
-      }
+      } */
    },
 
    changePlayerPicture() {
@@ -337,6 +336,17 @@ class MotherInLaw extends Bots {
 
 /* ---------- ANIMATION ---------- */
 
+// ---- stress level display
+
+function displayStress() {
+   var stressLvl = document.getElementById('stress');
+   if (player.stress >= 100) {
+      stressLvl.innerHTML = `100`;
+   } else {
+      stressLvl.innerHTML = `${player.stress}`;
+   }
+}
+
 // ---- chronometer
 
 const chronometer = {
@@ -352,9 +362,15 @@ const chronometer = {
             cancelAnimationFrame(myReq);
             gameOver('no time left', player);
          }
+         if (player.stress >= 100) {
+            clearInterval(chronometer.intervalId);
+            cancelAnimationFrame(myReq);
+            gameOver('too much stress', player);
+         }
          timeDisplay.innerHTML = `${chronometer.currentTime}`;
+         displayStress();
          player.time = chronometer.currentTime;
-         console.log("player time left : ", player.time);
+         console.log("counter : ", player.time);
       }, 1000);
    },
 
@@ -362,6 +378,7 @@ const chronometer = {
       clearInterval(chronometer.intervalId);
    },
 };
+
 
 // ---- bot factory
 
@@ -400,17 +417,6 @@ function animate(botCollection) {
    draw(office);
    draw(home);
 
-   // AFFICHAGE NIVEAU DE STRESS
-
-   function displayStress() {
-      var stressLvl = document.getElementById('stress');
-      if (player.stress >= 100) {
-         stressLvl.innerHTML = `I CAN'T !`;
-      } else {
-         stressLvl.innerHTML = `${player.stress}`;
-      }
-   }
-
    // check every game events (obstacles, accomplishments, time left)
 
    function gameStatus(botGroup) {
@@ -424,20 +430,19 @@ function animate(botCollection) {
       // check obstacles >> manage stress / time / discussions
       botGroup.forEach((bot) => {
          if (
-            Math.abs(player.x - bot.x) <= 15 &&
-            Math.abs(player.y - bot.y) <= 15
+            Math.abs(player.x - bot.x) <= 20 &&
+            Math.abs(player.y - bot.y) <= 20
          ) {
             //
             console.log('TOUCHED BY A BOT !');
             //
             player.manageStress(bot.stress);
-            displayStress();
             //
             player.loseTime(bot.time);
             chronometer.stopChrono();
             chronometer.startChrono(player);
 
-            // player.changePlayerPicture();
+            player.changePlayerPicture();
             console.log('time left :' + player.time);
             console.log('stress level :' + player.stress);
             bot.changePicture();
@@ -464,6 +469,7 @@ function animate(botCollection) {
       ) {
          //gifReactions('../images/reactions-gif/gif-graduated.gif');
          player.accomplishment += 1;
+         playerAnswers.innerHTML = `<p class="talks">I'm going to college ! Told ya !</p>`;
          console.log('accomplishment 1/3');
       }
       // job accomplishment
@@ -474,6 +480,7 @@ function animate(botCollection) {
       ) {
          //gifReactions('../images/reactions-gif/gif-get-it-girl.gif');
          player.accomplishment += 2;
+         playerAnswers.innerHTML = `<p class="talks">This job sucks.</p>`;
          console.log('accomplishment 2/3');
       }
       //  home accomplishment
@@ -483,6 +490,7 @@ function animate(botCollection) {
          player.accomplishment === 3
       ) {
          console.log('accomplishment 3/3');
+         playerAnswers.innerHTML = `<p class="talks">FINALLY HOME !</p>`;
          winGame(player);
          cancelAnimationFrame(myReq);
       }

@@ -7,6 +7,8 @@ const level3Btn = document.getElementById('level3');
 const levelDisplay = document.getElementById('level-display');
 const resetBtn = document.getElementById('reset-button');
 
+const timeDisplay = document.getElementById('time');
+
 /* ---------- DOM PLAYER + BOTS ---------- */
 const playerPic = document.getElementById('picture-player');
 const botPic = document.getElementById('picture-bot');
@@ -14,6 +16,8 @@ const playerAnswers = document.getElementById('player-answers');
 const botSpeech = document.getElementById('bot-speech');
 const botTalkBox = document.getElementById('bot-talks');
 const gifReaction = document.getElementById('gif-reaction');
+
+/* ---------- IMAGES TO BE LOADED ---------- */
 
 /* ---------- CANVAS ---------- */
 // var canvasContainer = document.getElementById('game-interface');
@@ -27,7 +31,7 @@ function draw(obj) {
    ctx.beginPath();
    //var img = new Image(); // Crée un nouvel élément Image
    //img.onload = function () {
-   ctx.drawImage(obj.img, obj.x, obj.y, 45, 45);
+   ctx.drawImage(obj.img, obj.x, obj.y, 60, 60);
    //};
    //img.src = `${obj.avatar}`;
 
@@ -46,42 +50,45 @@ function gifReactions(gif) {
 
 function closePlayground(endgame, newgif) {
    var playground = document.getElementById('game-interface');
-   playground.innerHTML = `<p class="flex" style="flex-direction: column; align-items: center"> ${endgame} </p>`;
-
-   gifReaction(newgif);
+   playground.innerHTML = `<p class="flex" id="end-game-popup"> ${endgame} </p>`;
+   gifReactions(newgif);
 }
 
-function gameOver(reason) {
+function gameOver(reason, you) {
    const gifGetOut = [
-      `../images/reactions-gif/gif-get-out.gif`,
+      //`../images/reactions-gif/gif-get-out.gif`,
       `../images/reactions-gif/gif-fired.gif`,
    ];
    const gifBreakdown = [
-      `../images/reactions-gif/gif-nailed-it-haaaa.gif`,
+      //`../images/reactions-gif/gif-nailed-it-haaaa.gif`,
       `../images/reactions-gif/gif-nailed-it-crazy.gif`,
    ];
-   
-   switch (reason) {
-      case 'too much stress':
-         closePlayground(
-            'GAME OVER - YOU HAD A NERVOUS BREAKDOWN...',
-            gifBreakdown[getRandomInt(gifGetOut.length)]
-         );
-         break;
 
-      case 'no time left':
-         closePlayground(
-            'GAME OVER - YOU NEED TO IMPROVE TIME MANAGEMENT !',
-            gifGetOut[getRandomInt(gifGetOut.length)]
-         );
-         break;
+   if (you.lose === 0 && you.win === 0) {
+      you.lose = 1;
 
-      default:
-         console.log('BUG');
+      switch (reason) {
+         case 'too much stress':
+            closePlayground(
+               'GAME OVER <br/> YOU HAD A NERVOUS BREAKDOWN...',
+               gifBreakdown[getRandomInt(gifGetOut.length)]
+            );
+            break;
+
+         case 'no time left':
+            closePlayground(
+               'GAME OVER <br/> YOU NEED TO IMPROVE TIME MANAGEMENT !',
+               gifGetOut[getRandomInt(gifGetOut.length)]
+            );
+            break;
+
+         default:
+            console.log('BUG');
+      }
    }
 }
 
-function winGame() {
+function winGame(you) {
    console.log('YOU WIN');
 
    const gifWin = [
@@ -91,21 +98,26 @@ function winGame() {
       `../images/reactions-gif/gif-nailed-it-done.gif`,
    ];
 
-   closePlayground('NAILED IT !!!!!!', gifWin.getRandomInt(gifWin.length));
+   if (you.win === 0 && you.lose === 0) {
+      you.win = 1;
+      closePlayground('NAILED IT !!!!!!', gifWin[getRandomInt(gifWin.length)]);
+   }
 }
 
 /* ---------- PLAYER AND BOTS ---------- */
 
 const player = {
    time: 100,
-   stress: 10,
+   stress: 0,
    pictures: '../images/pic-tiffany-normal-100.png',
    avatar: '../images/avatar-player-tiffany-50.jpg',
-   x: 10,
-   y: 10,
-   dx: 4, // pas de vélocité en abscisses
-   dy: 4, // pas de vélocité en ordonnées
+   x: 130,
+   y: 40,
+   dx: 7, // pas de vélocité en abscisses
+   dy: 7, // pas de vélocité en ordonnées
    accomplishment: 0,
+   win: 0,
+   lose: 0,
 
    move(event) {
       // equivalent de updatePosition() des bots
@@ -114,64 +126,64 @@ const player = {
             if (player.y >= player.dy) {
                player.y -= player.dy;
             }
-            console.log('player has moved UP');
             break;
          case 'KeyS':
             if (player.y < canvas.height - player.dy - 42)
                // chiffre trouvé après test console...
                player.y += player.dy;
-            console.log('player has moved DOWN');
             break;
          case 'KeyA':
             if (player.x >= player.dx) player.x -= player.dx;
-            console.log('player has moved LEFT');
             break;
          case 'KeyD':
             if (player.x < canvas.width - player.dx - 30) player.x += player.dx;
-            console.log('player has moved RIGHT');
             break;
          default:
             alert('please type a valid key : Z - Q - S - D');
       }
-      console.log(`player position is x : ${player.x}, y : ${player.y}`);
+      //console.log(`player position is x : ${player.x}, y : ${player.y}`);
    },
 
    loseTime(usage) {
-      this.time -= usage;
-      if (this.time <= 100) {
-         return gameOver('no time left');
-      } else if (this.time > 100) {
-         return (this.time = 100);
-      } else if (this.time < 15) {
+      player.time -= usage;
+      /* if (this.time <= 0) {
+         gameOver('no time left', player);
+      } else  */ if (
+         player.time > 100
+      ) {
+         player.time = 100;
+      } else if (player.time < 15) {
          playerAnswers.innerHTML = `<p class="talks">Oh sh*t !</p>`;
       } else {
-         console.log(this.time);
-         return this.time;
+         console.log('time lost : ', usage);
+         player.time;
       }
    },
 
    manageStress(effect) {
-      this.stress += effect;
-      if (this.stress > 100) {
-         return gameOver('to much stress');
-      } else if (this.stress < 0) {
-         playerAnswers.innerHTML = `<p class="talks">Living my best life !</p>`;
-         return (this.stress = 0);
-      } else {
-         return this.stress;
-      }
+      player.stress += effect;
+      if (player.stress >= 100) {
+         player.stress = 100;
+         playerAnswers.innerHTML = `<p class="talks">I CAN'T !</p>`;
+      } else if (player.stress < 0) {
+         player.stress = 0;
+      } /* else {
+         player.stress;
+      } */
    },
 
-   changePicture() {
-      if (this.stress <= 10) {
-         this.picture = '../images/pic-tiffany-normal-100.png';
-      } else if (this.stress > 10 && this.stress <= 40) {
-         this.picture = '../images/pic-tiffany-mad-100.jpg';
-      } else if (this.stress > 40 && this.stress <= 80) {
-         this.picture = '../images/pic-tiffany-stresses-100.jpg';
-      } else this.picture = '../images/pic-tiffany-escaping-100x150.jpg';
+   changePlayerPicture() {
+      if (player.stress <= 10) {
+         player.picture = '../images/pic-tiffany-normal-100.png';
+      } else if (player.stress > 10 && player.stress <= 40) {
+         player.picture = '../images/pic-tiffany-mad-100.jpg';
+      } else if (player.stress > 40 && player.stress <= 80) {
+         player.picture = '../images/pic-tiffany-stresses-100.jpg';
+      } else {
+         player.picture = '../images/pic-tiffany-escaping-100x150.jpg';
+      }
 
-      playerPic.setAttribute('src', `${this.picture}`);
+      playerPic.setAttribute('src', `${player.picture}`);
    },
 
    answerTo(bot) {
@@ -182,6 +194,8 @@ const player = {
             `I don't have time for that !`,
             `Hmmm... I'm kind of in a rush...`,
             `It was  nice to see ya! Bye!`,
+            `Oh! That's my bus there ! Gotta go !`,
+            `I'm late, ok ?!!`,
          ];
       } else if (bot === 'motherInLaw') {
          var answers = [
@@ -213,14 +227,15 @@ class Bots {
       this.y = y;
       this.dx = dx;
       this.dy = dy;
+      this.pictures = [];
    }
 
    updatePosition() {
       // change the direction
-      if (this.x + this.dx > canvas.width || this.x - this.dx < 0) {
+      if (this.x + this.dx > canvas.width || this.x + this.dx < 0) {
          this.dx = -this.dx; // sur l'axe des x
       }
-      if (this.y + this.dy > canvas.height || this.y - this.dy < 0) {
+      if (this.y + this.dy > canvas.height || this.y + this.dy < 0) {
          this.dy = -this.dy; // sur l'axe des y
       }
       // move the bot
@@ -228,14 +243,14 @@ class Bots {
       this.y += this.dy;
    }
 
-   changePicture(picturesArray) {
-      var randomPic = picturesArray[getRandomInt(picturesArray.length)];
+   changePicture() {
+      var randomPic = this.pictures[getRandomInt(this.pictures.length)];
       botTalkBox.innerHTML += `<img
       class="picture"
       id="picture-bot"
       style="display: none;"
       alt="bots pics"
-      src="${this.picture}"`;
+      src="${randomPic}"`;
    }
 }
 
@@ -243,7 +258,7 @@ class ExLovers extends Bots {
    constructor(x, y, dx, dy, img) {
       super(x, y, dx, dy);
       super.updatePosition();
-      //  super.changePicture();
+      super.changePicture();
       this.pictures = [
          '../images/bots-pictures/pic-bot-ex-drake-100.jpg',
          '../images/bots-pictures/pic-bot-ex-laverne-100.jpg',
@@ -253,7 +268,11 @@ class ExLovers extends Bots {
       this.img = img;
       this.name = 'ex';
       this.time = 10;
-      this.stress = 15;
+      this.stress = 10;
+      // this.x = x;
+      // this.dx = dx;
+      // this.y = y;
+      // this.dy = dy;
    }
 
    talk() {
@@ -273,7 +292,7 @@ class ExLovers extends Bots {
          }`;
       }, 4000);
 
-      player.answerTo(`${this.name}`);
+      player.answerTo(this.name);
    }
 }
 
@@ -281,7 +300,7 @@ class MotherInLaw extends Bots {
    constructor(x, y, dx, dy, img) {
       super(x, y, dx, dy, img);
       super.updatePosition();
-      //  super.changePicture();
+      super.changePicture();
       this.pictures = [
          `../images/bots-pictures/pic-bot-madea-1-100.jpg`,
          `../images/bots-pictures/pic-bot-madea-2-100.jpg`,
@@ -290,7 +309,7 @@ class MotherInLaw extends Bots {
       this.img = img;
       this.name = 'motherInLaw';
       this.time = 5;
-      this.stress = 30;
+      this.stress = 20;
    }
 
    talk() {
@@ -311,34 +330,176 @@ class MotherInLaw extends Bots {
          }</p>`;
       }, 3500);
 
-      player.answerTo('motherInLaw');
+      player.answerTo(this.name);
    }
 }
+
+/* ---------- ANIMATION ---------- */
+
+// ---- stress level display
+
+function displayStress() {
+   var stressLvl = document.getElementById('stress');
+   if (player.stress >= 100) {
+      stressLvl.innerHTML = `100`;
+   } else {
+      stressLvl.innerHTML = `${player.stress}`;
+   }
+}
+
+// ---- chronometer
+
+const chronometer = {
+   currentTime: player.time,
+   intervalId: 0,
+
+   startChrono() {
+      chronometer.intervalId = setInterval(() => {
+         chronometer.currentTime--;
+         if (chronometer.currentTime <= 0) {
+            chronometer.currentTime = 0;
+            clearInterval(chronometer.intervalId);
+            cancelAnimationFrame(myReq);
+            gameOver('no time left', player);
+         }
+         if (player.stress >= 100) {
+            clearInterval(chronometer.intervalId);
+            cancelAnimationFrame(myReq);
+            gameOver('too much stress', player);
+         }
+         timeDisplay.innerHTML = `${chronometer.currentTime}`;
+         displayStress();
+         player.time = chronometer.currentTime;
+         console.log("counter : ", player.time);
+      }, 1000);
+   },
+
+   stopChrono() {
+      clearInterval(chronometer.intervalId);
+   },
+};
+
+
+// ---- bot factory
 
 function generateBots(botType, amount, dx, dy, img) {
    var botGroup = [];
    for (var i = 0; i < amount; i++) {
-      // create amount*bots with random coordinates and push them in the botGroup array
+      // create (amount * bots) with random coordinates and push them in the botGroup array
       var x = Math.random() * canvas.width;
       var y = Math.random() * canvas.height;
 
       botGroup.push(new botType(x, y, dx, dy, img));
    }
-   console.log('CREATED BOTS : ' + botGroup);
+   console.log(botGroup);
    return botGroup;
 }
 
-function animate(botCollection) {
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
+// ---- animation
 
-   // update bots position and draw new position
+// to be declared before the animation - will be used later to stop animation
+var cancelAnimationFrame = window.cancelAnimationFrame;
+var myReq; 
+//
+
+function animate(botCollection) {
+   // clears the canvas
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   // updates bots position and draw new position
    botCollection.forEach((bot) => {
       bot.updatePosition();
       draw(bot);
    });
 
+   // draws player and objectives
    draw(player);
-   requestAnimationFrame(() => animate(botCollection));
+   draw(university);
+   draw(office);
+   draw(home);
+
+   // check every game events (obstacles, accomplishments, time left)
+
+   function gameStatus(botGroup) {
+      /* const shadyGifs = [
+         '../images/reactions-gif/gif-nailed-it-shady-sip.gif',
+         '../images/reactions-gif/gif-go-away.gif',
+         '../images/reactions-gif/gif-smh-insecure.gif',
+         '../images/reactions-gif/gif-nailed-it-laugh.gif',
+      ]; */
+
+      // check obstacles >> manage stress / time / discussions
+      botGroup.forEach((bot) => {
+         if (
+            Math.abs(player.x - bot.x) <= 20 &&
+            Math.abs(player.y - bot.y) <= 20
+         ) {
+            //
+            console.log('TOUCHED BY A BOT !');
+            //
+            player.manageStress(bot.stress);
+            //
+            player.loseTime(bot.time);
+            chronometer.stopChrono();
+            chronometer.startChrono(player);
+
+            player.changePlayerPicture();
+            console.log('time left :' + player.time);
+            console.log('stress level :' + player.stress);
+            bot.changePicture();
+
+            //bot.talk();
+
+            //gifReactions('../images/reactions-gif/gif-smh-insecure.gif');
+         }
+      });
+
+      // checks chronometer
+
+      // if (player.time === 0) {
+      //    chronometer.stopChrono();
+      //    gameOver('no time left', player);
+      //    cancelAnimationFrame(myReq);
+      // }
+
+      // university accomplishment
+      if (
+         Math.abs(player.x - university.x) <= 30 &&
+         Math.abs(player.y - university.y) <= 30 &&
+         player.accomplishment === 0
+      ) {
+         //gifReactions('../images/reactions-gif/gif-graduated.gif');
+         player.accomplishment += 1;
+         playerAnswers.innerHTML = `<p class="talks">I'm going to college ! Told ya !</p>`;
+         console.log('accomplishment 1/3');
+      }
+      // job accomplishment
+      if (
+         Math.abs(player.x - office.x) <= 30 &&
+         Math.abs(player.y - office.y) <= 30 &&
+         player.accomplishment === 1
+      ) {
+         //gifReactions('../images/reactions-gif/gif-get-it-girl.gif');
+         player.accomplishment += 2;
+         playerAnswers.innerHTML = `<p class="talks">This job sucks.</p>`;
+         console.log('accomplishment 2/3');
+      }
+      //  home accomplishment
+      if (
+         Math.abs(player.x - home.x) <= 30 &&
+         Math.abs(player.y - home.y) <= 30 &&
+         player.accomplishment === 3
+      ) {
+         console.log('accomplishment 3/3');
+         playerAnswers.innerHTML = `<p class="talks">FINALLY HOME !</p>`;
+         winGame(player);
+         cancelAnimationFrame(myReq);
+      }
+   }
+   gameStatus(botCollection);
+
+   // loop this function
+   //requestAnimationFrame(() => animate(botCollection));
+   myReq = requestAnimationFrame(() => animate(botCollection)); // this var will be used to stop the animation at the end of the game!
 }
 
 /* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
@@ -359,58 +520,6 @@ const home = {
    avatar: `../images/places/home.png`,
 };
 
-function gameStatus() {
-   // COMMENT LANCER CETTE FONCTION CONSTAMMENT ???
-   const shadyGifs = [
-      '../images/reactions-gif/gif-nailed-it-shady-sip.gif',
-      '../images/reactions-gif/gif-go-away.gif',
-      '../images/reactions-gif/gif-smh-insecure.gif',
-      '../images/reactions-gif/gif-nailed-it-laugh.gif',
-   ];
-
-   // check obstacles >> manage stress / time / discussions
-   botGroup.forEach((bot) => {
-      if (player.x === bot.x && player.y === bot.y) {
-         player.manageStress(bot.giveStress);
-         player.loseTime(bot.useTime);
-         bot.talk();
-         gifReactions(shadyGifs[getRandomInt(shadyGifs.length)]);
-      }
-   });
-
-   // checks chronometer
-   if (player.time === 0) {
-      gameOver('no time left');
-   }
-
-   // university accomplishment
-   if (
-      player.x === university.x &&
-      player.y === university.y &&
-      player.accomplishment === 0
-   ) {
-      gifReactions('../images/reactions-gif/gif-graduated.gif');
-      player.accomplishment += 1;
-   }
-   // job accomplishment
-   if (
-      player.x === office.x &&
-      player.y === office.y &&
-      player.accomplishment === 1
-   ) {
-      gifReactions('../images/reactions-gif/gif-get-it-girl.gif');
-      player.accomplishment += 2;
-   }
-   //  home accomplishment
-   if (
-      player.x === home.x &&
-      player.y === home.y &&
-      player.accomplishment === 3
-   ) {
-      winGame();
-   }
-}
-
 /* ---------- PAGE EVENTS ---------- */
 
 function definePlayerName(event) {
@@ -422,26 +531,11 @@ function definePlayerName(event) {
 
 function setDifficulty(event) {
    levelDisplay.innerText = `${event.target.textContent}`;
-   /* 
-   switch (event.target.id) {
-      case 'level2':
-         animate(generateBots(ExLovers, 5, 4, 4));
-         animate(generateBots(MotherInLaw, 1, 6, 6));
-         break;
-      case 'level3':
-         animate(generateBots(ExLovers, 6, 5, 5));
-         animate(generateBots(MotherInLaw, 2, 6, 6));
-         break;
-      default:
-         //LEVEL 1
-         animate(generateBots(ExLovers, 4, 3, 3));
-         animate(generateBots(MotherInLaw, 1, 5, 5));
-   } */
 }
 
 function loadImage(url) {
    return new Promise((resolve, reject) => {
-      var img = new Image(); // Crée un nouvel élément Image
+      var img = new Image();
       img.src = url;
       img.onload = function (evt) {
          resolve(evt.path[0]);
@@ -451,7 +545,8 @@ function loadImage(url) {
 }
 
 function startGame() {
-   // changement d'interface
+   // CHANGEMENT D'INTERFACE
+
    var body = document.querySelector('body');
    var landingPage = document.querySelector('#landing-page-instructions');
    var mainElements = document.getElementsByClassName('main');
@@ -459,23 +554,8 @@ function startGame() {
    landingPage.style.display = 'none';
    [...mainElements].forEach((elem) => (elem.style.display = 'initial'));
 
-   // affichage du chrono
-   function chronometerOn() {
-      var time = document.getElementById('time');
-      var currentTime = player.time;
+   // AFFICHAGE NIVEAU DE STRESS
 
-      let intervalId = setInterval(() => {
-         time.innerHTML = `${currentTime}`;
-         player.time = currentTime;
-         if (currentTime <= 0) {
-            clearInterval(intervalId);
-         }
-         currentTime--;
-      }, 1000);
-   }
-   chronometerOn();
-
-   // affichage du niveau de stress
    function displayStress() {
       var stressLvl = document.getElementById('stress');
       if (player.stress >= 100) {
@@ -486,56 +566,66 @@ function startGame() {
    }
    displayStress();
 
-   // chargement des avatars
+   // CHARGEMENT DES AVATARS
+
    const load1 = loadImage(university.avatar);
    const load2 = loadImage(office.avatar);
    const load3 = loadImage(home.avatar);
    const load4 = loadImage(player.avatar);
    const load5 = loadImage('../images/bots-pictures/avatar-ex0.png');
    const load6 = loadImage(`../images/bots-pictures/avatar-mil-madea.png`);
+   //const load7 = (shadyGifs.forEach(gif => loadImage(gif)))
 
-   // une fois toutes chargées, les images sont stockées dans de nouvelles variables
+   // CHARGEMENT DES IMAGES DANS DE NOUVELLES VARIABLES (une fois toutes chargées)
+
    Promise.all([load1, load2, load3, load4, load5, load6])
       .then((res) => {
          university.img = res[0];
          office.img = res[1];
          home.img = res[2];
          player.img = res[3];
+         //shadyGifsLoaded = res[6];
 
          draw(university);
          draw(office);
          draw(home);
          draw(player);
 
+         // la création de bots est effectuée après que toutes les img aient été chargées puis dessinées
+
          let exLovers;
          let mothersInLaw;
          let allBots;
-         // la création de bots est effectuée après que toutes les img aient été chargées puis dessinées
-         switch (levelDisplay.id) {
-            case 'level2':
-               exLovers = generateBots(ExLovers, 5, 4, 4, res[4]);
-               mothersInLaw = generateBots(MotherInLaw, 3, 6, 6, res[5]);
+
+         switch (levelDisplay.innerText) {
+            case 'CHALLENGING':
+               exLovers = generateBots(ExLovers, 3, 3, 3, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 1, 4, 4, res[5]);
                allBots = exLovers.concat(mothersInLaw);
                animate(allBots);
                break;
-            case 'level3':
-               exLovers = generateBots(ExLovers, 6, 5, 5, res[4]);
-               mothersInLaw = generateBots(MotherInLaw, 2, 6, 6, res[5]);
+            case 'HAAAARD':
+               exLovers = generateBots(ExLovers, 4, 3, 3, res[4]);
+               mothersInLaw = generateBots(MotherInLaw, 2, 4, 4, res[5]);
                allBots = exLovers.concat(mothersInLaw);
                animate(allBots);
                break;
             default:
-               // = level 1
-               exLovers = generateBots(ExLovers, 4, 3, 3, res[4]);
+               // = 'CHILL'
+               exLovers = generateBots(ExLovers, 2, 2, 2, res[4]);
                mothersInLaw = generateBots(MotherInLaw, 1, 5, 5, res[5]);
                allBots = exLovers.concat(mothersInLaw);
                animate(allBots);
          }
-         console.log(res[5], res[6]);
       })
       .catch((err) => console.error(err));
 
    document.onkeypress = player.move;
+
+   // AFFICHAGE DU CHRONO
+
+   chronometer.startChrono(player);
+   // chronometerOn(player);
 }
 
 function resetGame() {
@@ -546,8 +636,8 @@ function resetGame() {
 /* ---------- LISTENERS ---------- */
 
 playerName.addEventListener('change', definePlayerName);
-gotItBtn.addEventListener('click', startGame);
 level1Btn.addEventListener('click', setDifficulty);
 level2Btn.addEventListener('click', setDifficulty);
 level3Btn.addEventListener('click', setDifficulty);
+gotItBtn.addEventListener('click', startGame);
 resetBtn.addEventListener('click', resetGame);
