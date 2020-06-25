@@ -307,16 +307,15 @@ input#landing-player-name {
 audio {
    position: absolute;
    bottom: 10px;
-   left: 50%;
-   transform: translateX(-50%);
-   width: 150px;
-   height: 50px;
+   left: 100px;
+   width: 100px;
+   height: 70px;
    -webkit-appearance:none;
 } 
 
 audio::-webkit-media-controls-overlay-enclosure,
 audio::-webkit-media-controls-current-time-display, 
-audio::-webkit-media-controls-time-remaining-display,audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-time-remaining-display,
 audio::-webkit-media-controls-timeline,
 audio::-webkit-media-controls-toggle-closed-captions-button {
    display: none;

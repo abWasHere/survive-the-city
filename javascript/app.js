@@ -31,7 +31,7 @@ function draw(obj) {
    ctx.beginPath();
    //var img = new Image(); // Crée un nouvel élément Image
    //img.onload = function () {
-   ctx.drawImage(obj.img, obj.x, obj.y, 60, 60);
+   ctx.drawImage(obj.img, obj.x, obj.y, 70, 70);
    //};
    //img.src = `${obj.avatar}`;
 
@@ -118,6 +118,16 @@ const player = {
    accomplishment: 0,
    win: 0,
    lose: 0,
+   touchable: true,
+
+   becomeTouchable() {
+      if (!player.touchable) {
+         setTimeout(() => {
+            player.touchable = true;
+            console.log('player becomes TOUCHABLE AGAIN');
+         }, 1500);
+      }
+   },
 
    move(event) {
       // equivalent de updatePosition() des bots
@@ -141,7 +151,6 @@ const player = {
          default:
             alert('please type a valid key : Z - Q - S - D');
       }
-      //console.log(`player position is x : ${player.x}, y : ${player.y}`);
    },
 
    loseTime(usage) {
@@ -195,12 +204,6 @@ const player = {
             `Oh! That's my bus there ! Gotta go !`,
             `See you on Sunday ?`,
          ];
-      } else if (bot === 'obstacles') {
-         var answers = [
-            `Oh! That's my bus there ! Gotta go !`,
-            `Sorry... Me no speak english...`,
-            `I'm late, ok ?!!`,
-         ];
       }
 
       playerAnswers.innerHTML = `<p class="talks">${firstAnswer}</p>`;
@@ -209,7 +212,7 @@ const player = {
          playerAnswers.innerHTML += `<p class="talks">
           ${answers[getRandomInt(answers.length)]}
        </p>`;
-      }, 5500);
+      }, 3000);
    },
 };
 
@@ -282,7 +285,7 @@ class ExLovers extends Bots {
          botSpeech.innerHTML += `<p class='talks'> ${
             talks[getRandomInt(talks.length)]
          }`;
-      }, 4000);
+      }, 1500);
 
       player.answerTo(this.name);
    }
@@ -320,7 +323,7 @@ class MotherInLaw extends Bots {
          botSpeech.innerHTML += `<p class="talks">${
             talks[getRandomInt(talks.length)]
          }</p>`;
-      }, 3500);
+      }, 1500);
 
       player.answerTo(this.name);
    }
@@ -387,7 +390,6 @@ function generateBots(botType, amount, dx, dy, img) {
 
       botGroup.push(new botType(x, y, dx, dy, img));
    }
-   console.log(botGroup);
    return botGroup;
 }
 
@@ -427,36 +429,36 @@ function animate(botCollection) {
 
       botGroup.forEach((bot) => {
          if (
-            Math.abs(player.x - bot.x) <= 20 &&
-            Math.abs(player.y - bot.y) <= 20
+            player.touchable === true &&
+            Math.abs(player.x - bot.x) <= 30 &&
+            Math.abs(player.y - bot.y) <= 30
          ) {
             //
-            console.log('TOUCHED BY A BOT !', bot.name);
-            //
+            console.log('touched by =>', bot.name);
+
+            //PLAYER IS UNTOUCHABLE FOR 4 SECONDS
+            console.log('player becomes UNTOUCHABLE');
+            player.touchable = false;
+
+            // BECOMES TOUCHABLE AGAIN
+            player.becomeTouchable();
+
+            // GET STRESS
             player.manageStress(bot.stress);
-            //
-            console.log('time before colision :' + chronometer.currentTime);
 
-            player.loseTime(bot.time); // CHANGED
-            console.log('time after colision :' + chronometer.currentTime);
+            // LOSE TIME
+            player.loseTime(bot.time);
 
+            // PLAYER CHANGE PIC
             player.changePlayerPicture();
             console.log('stress level :' + player.stress);
             bot.changePicture();
 
-            //bot.talk();
+            bot.talk();
 
-            //gifReactions('../images/reactions-gif/gif-smh-insecure.gif');
+            gifReactions('../images/reactions-gif/gif-smh-insecure.gif');
          }
       });
-
-      // checks chronometer
-
-      // if (player.time === 0) {
-      //    chronometer.stopChrono();
-      //    gameOver('no time left', player);
-      //    cancelAnimationFrame(myReq);
-      // }
 
       // university accomplishment
       if (
@@ -464,7 +466,7 @@ function animate(botCollection) {
          Math.abs(player.y - university.y) <= 30 &&
          player.accomplishment === 0
       ) {
-         //gifReactions('../images/reactions-gif/gif-graduated.gif');
+         gifReactions('../images/reactions-gif/gif-graduated.gif');
          player.accomplishment += 1;
          playerAnswers.innerHTML = `<p class="talks">I'm going to college ! Told ya !</p>`;
          console.log('accomplishment 1/3');
@@ -475,9 +477,9 @@ function animate(botCollection) {
          Math.abs(player.y - office.y) <= 30 &&
          player.accomplishment === 1
       ) {
-         //gifReactions('../images/reactions-gif/gif-get-it-girl.gif');
+         gifReactions('../images/reactions-gif/gif-get-it-girl.gif');
          player.accomplishment += 2;
-         playerAnswers.innerHTML = `<p class="talks">This job sucks.</p>`;
+         playerAnswers.innerHTML = `<p class="talks">This job sucks ...</p>`;
          console.log('accomplishment 2/3');
       }
       //  home accomplishment
