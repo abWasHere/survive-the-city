@@ -351,11 +351,13 @@ function displayStress() {
 
 const chronometer = {
    currentTime: player.time,
-   intervalId: 0,
+   intervalId: 0,   
 
    startChrono() {
       chronometer.intervalId = setInterval(() => {
+
          chronometer.currentTime--;
+
          if (chronometer.currentTime <= 0) {
             chronometer.currentTime = 0;
             clearInterval(chronometer.intervalId);
@@ -369,7 +371,9 @@ const chronometer = {
          }
          timeDisplay.innerHTML = `${chronometer.currentTime}`;
          displayStress();
-         player.time = chronometer.currentTime;
+
+         //player.time = chronometer.currentTime;
+
          console.log("counter : ", player.time);
       }, 1000);
    },
@@ -428,6 +432,9 @@ function animate(botCollection) {
       ]; */
 
       // check obstacles >> manage stress / time / discussions
+      
+      player.time = chronometer.currentTime; 
+
       botGroup.forEach((bot) => {
          if (
             Math.abs(player.x - bot.x) <= 20 &&
@@ -440,6 +447,7 @@ function animate(botCollection) {
             //
             player.loseTime(bot.time);
             chronometer.stopChrono();
+            console.log("player time  at colison is : ", player.time)
             chronometer.startChrono(player);
 
             player.changePlayerPicture();
