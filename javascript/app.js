@@ -107,7 +107,7 @@ function winGame(you) {
 /* ---------- PLAYER AND BOTS ---------- */
 
 const player = {
-   time: 100,
+   duration: 100, // CHANGED
    stress: 0,
    pictures: '../images/pic-tiffany-normal-100.png',
    avatar: '../images/avatar-player-tiffany-50.jpg',
@@ -145,18 +145,10 @@ const player = {
    },
 
    loseTime(usage) {
-      player.time -= usage;
-      /* if (this.time <= 0) {
-         gameOver('no time left', player);
-      } else  */ if (
-         player.time > 100
-      ) {
-         player.time = 100;
-      } else if (player.time < 15) {
+      // CHANGED
+      let newTime = chronometer.decrementChrono(usage);
+      if (newTime < 15) {
          playerAnswers.innerHTML = `<p class="talks">Oh sh*t !</p>`;
-      } else {
-         console.log('time lost : ', usage);
-         player.time;
       }
    },
 
@@ -350,12 +342,11 @@ function displayStress() {
 // ---- chronometer
 
 const chronometer = {
-   currentTime: player.time,
-   intervalId: 0,   
+   currentTime: player.duration,
+   intervalId: 0,
 
    startChrono() {
       chronometer.intervalId = setInterval(() => {
-
          chronometer.currentTime--;
 
          if (chronometer.currentTime <= 0) {
@@ -371,18 +362,19 @@ const chronometer = {
          }
          timeDisplay.innerHTML = `${chronometer.currentTime}`;
          displayStress();
-
-         //player.time = chronometer.currentTime;
-
-         console.log("counter : ", player.time);
       }, 1000);
+   },
+
+   decrementChrono(usage) {
+      // CHANGED
+      chronometer.currentTime -= usage;
+      return chronometer.currentTime;
    },
 
    stopChrono() {
       clearInterval(chronometer.intervalId);
    },
 };
-
 
 // ---- bot factory
 
@@ -403,7 +395,7 @@ function generateBots(botType, amount, dx, dy, img) {
 
 // to be declared before the animation - will be used later to stop animation
 var cancelAnimationFrame = window.cancelAnimationFrame;
-var myReq; 
+var myReq;
 //
 
 function animate(botCollection) {
@@ -432,8 +424,6 @@ function animate(botCollection) {
       ]; */
 
       // check obstacles >> manage stress / time / discussions
-      
-      player.time = chronometer.currentTime; 
 
       botGroup.forEach((bot) => {
          if (
@@ -441,17 +431,16 @@ function animate(botCollection) {
             Math.abs(player.y - bot.y) <= 20
          ) {
             //
-            console.log('TOUCHED BY A BOT !');
+            console.log('TOUCHED BY A BOT !', bot.name);
             //
             player.manageStress(bot.stress);
             //
-            player.loseTime(bot.time);
-            chronometer.stopChrono();
-            console.log("player time  at colison is : ", player.time)
-            chronometer.startChrono(player);
+            console.log('time before colision :' + chronometer.currentTime);
+
+            player.loseTime(bot.time); // CHANGED
+            console.log('time after colision :' + chronometer.currentTime);
 
             player.changePlayerPicture();
-            console.log('time left :' + player.time);
             console.log('stress level :' + player.stress);
             bot.changePicture();
 
