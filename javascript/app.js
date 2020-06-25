@@ -110,9 +110,9 @@ const player = {
    duration: 100, // CHANGED
    stress: 0,
    pictures: '../images/pic-tiffany-normal-100.png',
-   avatar: '../images/avatar-player-tiffany-50.jpg',
-   x: 130,
-   y: 40,
+   avatar: '../images/animated-avatar.gif',
+   x: 100,
+   y: 90,
    dx: 7, // pas de vélocité en abscisses
    dy: 7, // pas de vélocité en ordonnées
    accomplishment: 0,
@@ -502,19 +502,19 @@ function animate(botCollection) {
 /* ---------- ACCOMPLISHMENTS OBJECTS ---------- */
 
 const university = {
-   x: 300,
-   y: 10,
-   avatar: `../images/places/university.png`,
+   x: 600,
+   y: 60,
+   avatar: `../images/places/university3.png`,
 };
 const office = {
-   x: 50,
-   y: 300,
-   avatar: `../images/places/office.png`,
+   x: 30,
+   y: 270,
+   avatar: `../images/places/office2.png`,
 };
 const home = {
-   x: 700,
-   y: 300,
-   avatar: `../images/places/home.png`,
+   x: 270,
+   y: 20,
+   avatar: `../images/places/home2.png`,
 };
 
 /* ---------- PAGE EVENTS ---------- */

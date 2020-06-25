@@ -225,7 +225,7 @@ input#landing-player-name {
 /* ------- PLAYGROUND --------- */
 
 #game-interface {
-   background: url('./images/places/tim-trad-r2NBj6GAJzw-unsplash.jpg');
+   background: url('./images/places/city-map.jpg');
    background-size: cover;
    height: 450px;
    width: 100%;
@@ -281,7 +281,7 @@ input#landing-player-name {
 
 #footer {
    justify-content: flex-end;
-   padding: 0px 10px;
+   padding: 0px 20px;
    height: 4vh;
    background-color: black;
    color: rgb(98, 0, 255);
@@ -300,4 +300,28 @@ input#landing-player-name {
 #footer a {
    text-decoration: none;
    color: inherit;
+}
+
+/* ------- FOOTER ------- */
+ 
+audio {
+   position: absolute;
+   bottom: 10px;
+   left: 50%;
+   transform: translateX(-50%);
+   width: 150px;
+   height: 50px;
+   -webkit-appearance:none;
+} 
+
+audio::-webkit-media-controls-overlay-enclosure,
+audio::-webkit-media-controls-current-time-display, 
+audio::-webkit-media-controls-time-remaining-display,audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-timeline,
+audio::-webkit-media-controls-toggle-closed-captions-button {
+   display: none;
+} 
+
+audio::-webkit-media-controls-panel{
+   background-color:rgba(102, 10, 110, 0.486);
 }
