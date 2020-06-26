@@ -49,7 +49,7 @@ function gifReactions(gif) {
    gifReaction.setAttribute('src', `${gif}`);
 }
 
-function playSound(src) {
+function switchSound(src) {
    sound.pause();
    sound.removeAttribute('loop');
    sound.innerHTML = `
@@ -57,6 +57,10 @@ function playSound(src) {
    sound.load();
    sound.play();
    sound.currentTime = 0;
+}
+
+function stopSound() {
+   sound.pause;
 }
 
 function closePlayground(endgame, newgif) {
@@ -70,11 +74,13 @@ function closePlayground(endgame, newgif) {
    src="./images/pic-tiffany-normal-100.png"
    alt="gif"/>`;
 
+   stopSound();
+
 }
 
 function gameOver(reason, you) {
 
-   playSound("./audio/fail-sound-effect.mp3");
+   switchSound("./audio/fail-sound-effect.mp3");
 
    const gifGetOut = [
       `./images/reactions-gif/gif-get-out.gif`,
@@ -512,6 +518,8 @@ function animate(botCollection) {
          player.accomplishment === 3
       ) {
          console.log('accomplishment 3/3');
+         player.stress = 0; // NEW
+         player.touchable = false; // NEW
          playerAnswers.innerHTML = `<p class="talks">FINALLY HOME !</p>`;
          winGame(player);
          cancelAnimationFrame(myReq);
@@ -649,8 +657,7 @@ function startGame() {
 }
 
 function resetGame() {
-   //REFRESH THE PAGE
-   document.location.reload(true);
+   document.location.reload(true);   //REFRESH THE PAGE
 }
 
 /* ---------- LISTENERS ---------- */
