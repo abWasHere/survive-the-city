@@ -67,12 +67,12 @@ function closePlayground(endgame, newgif) {
 
 function gameOver(reason, you) {
    const gifGetOut = [
-      `./../images/reactions-gif/gif-get-out.gif`,
-      `./../images/reactions-gif/gif-fired.gif`,
+      `./images/reactions-gif/gif-get-out.gif`,
+      `./images/reactions-gif/gif-fired.gif`,
    ];
    const gifBreakdown = [
-      `./../images/reactions-gif/gif-nailed-it-haaaa.gif`,
-      `./../images/reactions-gif/gif-nailed-it-crazy.gif`,
+      `./images/reactions-gif/gif-nailed-it-haaaa.gif`,
+      `./images/reactions-gif/gif-nailed-it-crazy.gif`,
    ];
 
    if (you.lose === 0 && you.win === 0) {
@@ -103,10 +103,10 @@ function winGame(you) {
    console.log('YOU WIN');
 
    const gifWin = [
-      `./../images/reactions-gif/tiffany-dance-wine-home.gif`,
-      `./../images/reactions-gif/tiffany-made-it.gif`,
-      `./../images/reactions-gif/gif-proud.gif`,
-      `./../images/reactions-gif/gif-nailed-it-done.gif`,
+      `./images/reactions-gif/tiffany-dance-wine-home.gif`,
+      `./images/reactions-gif/tiffany-made-it.gif`,
+      `./images/reactions-gif/gif-proud.gif`,
+      `./images/reactions-gif/gif-nailed-it-done.gif`,
    ];
 
    if (you.win === 0 && you.lose === 0) {
@@ -120,8 +120,8 @@ function winGame(you) {
 const player = {
    duration: 90, // CHANGED
    stress: 0,
-   pictures: './../images/pic-tiffany-normal-100.png',
-   avatar: './../images/animated-avatar.gif',
+   pictures: './images/pic-tiffany-normal-100.png',
+   avatar: './images/animated-avatar.gif',
    x: 100,
    y: 90,
    dx: 7, // pas de vélocité en abscisses
@@ -187,13 +187,13 @@ const player = {
 
    changePlayerPicture() {
       if (player.stress <= 10) {
-         player.picture = './../images/pic-tiffany-normal-100.png';
+         player.picture = './images/pic-tiffany-normal-100.png';
       } else if (player.stress > 10 && player.stress <= 40) {
-         player.picture = './../images/pic-tiffany-mad-100.jpg';
+         player.picture = './images/pic-tiffany-mad-100.jpg';
       } else if (player.stress > 40 && player.stress <= 80) {
-         player.picture = './../images/pic-tiffany-stresses-100.jpg';
+         player.picture = './images/pic-tiffany-stresses-100.jpg';
       } else {
-         player.picture = './../images/pic-tiffany-escaping-100x150.jpg';
+         player.picture = './images/pic-tiffany-escaping-100x150.jpg';
       }
 
       playerPic.setAttribute('src', `${player.picture}`);
@@ -272,10 +272,10 @@ class ExLovers extends Bots {
       super.updatePosition();
       super.changePicture();
       this.pictures = [
-         './../images/bots-pictures/pic-bot-ex-drake-100.jpg',
-         './../images/bots-pictures/pic-bot-ex-laverne-100.jpg',
-         './../images/bots-pictures/pic-bot-ex-laurence-100.jpg',
-         './../images/bots-pictures/pic-bot-ex-meghan-100.jpg',
+         './images/bots-pictures/pic-bot-ex-drake-100.jpg',
+         './images/bots-pictures/pic-bot-ex-laverne-100.jpg',
+         './images/bots-pictures/pic-bot-ex-laurence-100.jpg',
+         './images/bots-pictures/pic-bot-ex-meghan-100.jpg',
       ];
       this.img = img;
       this.name = 'ex';
@@ -310,9 +310,9 @@ class MotherInLaw extends Bots {
       super.updatePosition();
       super.changePicture();
       this.pictures = [
-         `./../images/bots-pictures/pic-bot-madea-1-100.jpg`,
-         `./../images/bots-pictures/pic-bot-madea-2-100.jpg`,
-         `./../images/bots-pictures/pic-bot-madea-3-100.jpg`,
+         `./images/bots-pictures/pic-bot-madea-1-100.jpg`,
+         `./images/bots-pictures/pic-bot-madea-2-100.jpg`,
+         `./images/bots-pictures/pic-bot-madea-3-100.jpg`,
       ];
       this.img = img;
       this.name = 'motherInLaw';
@@ -432,10 +432,10 @@ function animate(botCollection) {
 
    function gameStatus(botGroup) {
       const shadyGifs = [
-         './../images/reactions-gif/gif-nailed-it-shady-sip.gif',
-         './../images/reactions-gif/gif-go-away.gif',
-         './../images/reactions-gif/gif-smh-insecure.gif',
-         './../images/reactions-gif/gif-nailed-it-laugh.gif',
+         './images/reactions-gif/gif-nailed-it-shady-sip.gif',
+         './images/reactions-gif/gif-go-away.gif',
+         './images/reactions-gif/gif-smh-insecure.gif',
+         './images/reactions-gif/gif-nailed-it-laugh.gif',
       ];
 
       // check obstacles >> manage stress / time / discussions
@@ -479,7 +479,7 @@ function animate(botCollection) {
          Math.abs(player.y - university.y) <= 35 &&
          player.accomplishment === 0
       ) {
-         gifReactions('./../images/reactions-gif/gif-graduated.gif');
+         gifReactions('./images/reactions-gif/gif-graduated.gif');
          player.accomplishment += 1;
          playerAnswers.innerHTML = `<p class="talks">I'm going to college ! Told ya !</p>`;
          console.log('accomplishment 1/3');
@@ -490,7 +490,7 @@ function animate(botCollection) {
          Math.abs(player.y - office.y) <= 30 &&
          player.accomplishment === 1
       ) {
-         gifReactions('./../images/reactions-gif/gif-get-it-girl.gif');
+         gifReactions('./images/reactions-gif/gif-get-it-girl.gif');
          player.accomplishment += 2;
          playerAnswers.innerHTML = `<p class="talks">This job sucks ...</p>`;
          console.log('accomplishment 2/3');
@@ -519,17 +519,17 @@ function animate(botCollection) {
 const university = {
    x: 600,
    y: 60,
-   avatar: `./../images/places/university.png`,
+   avatar: `./images/places/university.png`,
 };
 const office = {
    x: 30,
    y: 270,
-   avatar: `./../images/places/office2.png`,
+   avatar: `./images/places/office2.png`,
 };
 const home = {
    x: 270,
    y: 20,
-   avatar: `./../images/places/home3.png`,
+   avatar: `./images/places/home3.png`,
 };
 
 /* ---------- PAGE EVENTS ---------- */
@@ -587,7 +587,7 @@ function startGame() {
    const load5 = loadImage(
       'https://img.icons8.com/ios-filled/50/000000/decision.png'
    );
-   const load6 = loadImage(`./../images/bots-pictures/avatar-mil-madea.png`);
+   const load6 = loadImage(`./images/bots-pictures/avatar-mil-madea.png`);
 
    // CHARGEMENT DES IMAGES DANS DE NOUVELLES VARIABLES (une fois toutes chargées)
 
