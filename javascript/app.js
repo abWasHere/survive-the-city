@@ -630,7 +630,7 @@ function startGame() {
                animate(allBots);
          }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("my promise all is falling", err));
 
    document.onkeypress = player.move;
 
