@@ -9,7 +9,7 @@ const resetBtn = document.getElementById('reset-button');
 
 const timeDisplay = document.getElementById('time');
 
-const sound = document.getElementById('audio-files');
+const sound = document.getElementById('audio');
 
 /* ---------- DOM PLAYER + BOTS ---------- */
 const gameTalks = document.getElementById('game-talks');
@@ -49,6 +49,16 @@ function gifReactions(gif) {
    gifReaction.setAttribute('src', `${gif}`);
 }
 
+function playSound(src) {
+   sound.pause();
+   sound.removeAttribute('loop');
+   sound.innerHTML = `
+   <source src=${src} type="audio/mp3">`;
+   sound.load();
+   sound.play();
+   sound.currentTime = 0;
+}
+
 function closePlayground(endgame, newgif) {
    var playground = document.getElementById('game-interface');
    playground.innerHTML = `<p class="flex" id="end-game-popup"> ${endgame} </p>`;
@@ -60,12 +70,12 @@ function closePlayground(endgame, newgif) {
    src="./images/pic-tiffany-normal-100.png"
    alt="gif"/>`;
 
-   // sound.removeAttribute('loop');
-   // sound.innerHTML = `
-   // <source src="./audio/fail-sound-effect.mp3" type="audio/mp3">`;
 }
 
 function gameOver(reason, you) {
+
+   playSound("./audio/fail-sound-effect.mp3");
+
    const gifGetOut = [
       `./images/reactions-gif/gif-get-out.gif`,
       `./images/reactions-gif/gif-fired.gif`,
@@ -262,7 +272,7 @@ class Bots {
       alt="bots pics"
       src="${randomPic}"`; 
  */
-      console.log('bot picture : ', randomPic);
+
    }
 }
 
@@ -630,7 +640,7 @@ function startGame() {
                animate(allBots);
          }
       })
-      .catch((err) => console.error("my promise all is falling", err));
+      .catch((err) => console.error('my promise all is falling', err));
 
    document.onkeypress = player.move;
 
